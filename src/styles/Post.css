@@ -1,0 +1,22 @@
+.post {
+  .post-title {
+  }
+
+  .post-text {
+  }
+
+  .post-statistics {
+    display: flex;
+
+    .st-part {
+      .icon {
+      }
+
+      .label {
+      }
+    }
+
+    .view-part {
+    }
+  }
+}
