@@ -1,36 +1,88 @@
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Yellowtail&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Yellowtail&display=swap')
+layer(lib);
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined')
+layer(lib);
 
 * {
-  box-sizing: border-box;
   margin: 0;
   padding: 0;
-}
 
-a {
-  text-decoration: none;
-}
-
-ul,
-ol {
+  appearance: none;
   list-style-type: none;
+  text-decoration: none;
+  border-style: none;
+
+  box-sizing: border-box;
+  resize: none;
+
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  color: inherit;
 }
 
 :root {
   font-family: 'Open Sans', serif;
   font-optical-sizing: auto;
-  font-weight: 400;
   font-size: 16px;
+  font-weight: 400;
   font-style: normal;
   font-variation-settings: 'wdth' 100;
 
-  color-scheme: light dark;
+  color-scheme: light;
+  color: var(--color-text);
+
+  --color-background-primary: #9fa8da;
+  --color-background-secondary: #f9fbff;
+  --color-nav-link-text: #9fa8da;
+  --color-nav-link-background: #e5e9ff;
+  --color-logo-text: #191a40;
+  --color-hover-primary: #191a40;
+  --color-hover-secondary: #191a40;
+  --color-active-primary: #191a40;
+  --color-active-secondary: #191a40;
+
+  --color-text: black;
 }
 
 :root.scheme-black {
+  --color-background-primary: #9fa8da;
+  --color-background-secondary: #f9fbff;
+  --color-nav-link-text: #9fa8da;
+  --color-nav-link-background: #eaedff;
+  --color-logo-text: #191a40;
 }
 
 body {
-  background-color: rgb(87, 89, 87);
+  background-color: var(--color-background-primary);
+}
+
+.hidden {
+  display: none;
+}
+
+.absolute {
+  position: absolute;
+}
+
+.invisible {
+  visibility: hidden;
+}
+
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  line-height: 1;
+  user-select: none;
+  font-size: 1.3em;
+
+  font-variation-settings: 'wght' 700, 'FILL' 1;
+  font-weight: normal;
+}
+
+.material-symbols-outlined.disabled {
+  pointer-events: none;
+  opacity: 0.5;
 }
 
 /* .material-symbols-outlined {

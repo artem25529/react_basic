@@ -1,22 +1,163 @@
 .post {
-  .post-title {
+  background-color: rgb(235, 255, 248);
+  padding: 1.5em;
+  margin: 1em 0;
+  position: relative;
+  border: 1px solid;
+
+  & > .loader {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+    display: none;
+    place-items: center;
   }
 
-  .post-text {
+  button:disabled {
+    pointer-events: none;
+    opacity: 0.5;
   }
 
-  .post-statistics {
+  .err {
+    color: crimson;
+  }
+
+  & > .post-content {
     display: flex;
+    gap: 0.45em;
+    margin-bottom: 1.2em;
 
-    .st-part {
-      .icon {
+    & > .post-content-wrapper {
+      flex-grow: 1;
+
+      & > .post-title-wrapper {
+        font-weight: bold;
+        font-size: 1.6em;
+        margin-bottom: 0.5em;
+
+        & > .post-title {
+          width: 100%;
+        }
       }
 
-      .label {
+      & > .post-text {
+        line-height: 1.6;
+        width: 100%;
+      }
+    }
+
+    & > .post-favorite {
+    }
+
+    & > #post-form {
+      display: none;
+    }
+
+    & > #post-box {
+      display: block;
+    }
+
+    & > .post-favorite {
+      font-size: 1.5em;
+      display: none;
+    }
+  }
+
+  & > .post-controls {
+    width: 5em;
+    right: -5em;
+    top: 50%;
+    transform: translateY(-50%);
+    position: absolute;
+    display: none;
+
+    .post-control {
+      width: fit-content;
+      border: 1px solid;
+      border-left: none;
+      padding: 0.4em 0.75em;
+      border-top-right-radius: 0.4em;
+      border-bottom-right-radius: 0.4em;
+
+      .material-symbols-outlined {
+        display: block;
+      }
+    }
+
+    .post-control.edit {
+      margin-bottom: 1.7em;
+
+      & > .submit-control-wrapper {
+        & > .post-form-submit-btn {
+          margin-bottom: 1em;
+        }
+      }
+    }
+  }
+
+  & > .post-statistics {
+    display: flex;
+    gap: 2.2em;
+    font-size: 1.12em;
+    padding-inline: 0.5em;
+
+    & > .post-statistic {
+      display: flex;
+      align-items: center;
+      gap: 0.4em;
+
+      &:first-child {
+        margin-right: auto;
       }
     }
 
     .view-part {
+    }
+  }
+}
+
+.post.extended {
+  & > .post-controls {
+    display: block;
+
+    & > .post-control.edit {
+      & > .edit-control-wrapper {
+        display: block;
+      }
+
+      & > .submit-control-wrapper {
+        display: none;
+      }
+    }
+  }
+
+  & > .post-content {
+    & > .post-favorite {
+      display: block;
+    }
+  }
+}
+
+.post.extended.edit {
+  & > .post-content {
+    & > #post-form {
+      display: block;
+    }
+
+    & > #post-box {
+      display: none;
+    }
+  }
+
+  & > .post-controls {
+    & > .post-control.edit {
+      & > .edit-control-wrapper {
+        display: none;
+      }
+
+      & > .submit-control-wrapper {
+        display: block;
+      }
     }
   }
 }

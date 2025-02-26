@@ -1,42 +1,29 @@
+import { createContext, useEffect, useState } from 'react';
+import Header from '../components/Header';
 import '../styles/Layout.css';
-import { Link, Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
+
+const UserContext = createContext();
 
 function Layout() {
+  const [user, setUser] = useState();
+
+  useEffect(() => {
+    setUser(localStorage.getItem('loggedInUser'));
+  }, []);
+
   return (
-    <div className="page">
-      <header className="page-header">
-        <a className="logo-container" href="#">
-          <img
-            className="logo-img"
-            src="https://img.icons8.com/pulsar-color/240/chat-message.png"
-            alt="site logo"
-          />
-          &nbsp;&nbsp;
-          <div className="logo-legend">WriteWave</div>
-        </a>
-        <nav>
-          <ul>
-            <li>
-              <Link to="/about">About</Link>
-            </li>
-            <li>
-              <Link to="/blog">Blog</Link>
-            </li>
-            <li>
-              <Link to="/login">Login</Link>
-            </li>
-            <li>
-              <a href="#">News</a>
-            </li>
-          </ul>
-        </nav>
-      </header>
-      <main className="page-main">
-        <Outlet />
-      </main>
-      <footer className="page-footer">Footer</footer>
-    </div>
+    <UserContext.Provider value={{ user, setUser }}>
+      <div className="page">
+        <Header />
+        <main className="page-main">
+          <Outlet />
+        </main>
+        <footer className="page-footer">Footer</footer>
+      </div>
+    </UserContext.Provider>
   );
 }
 
 export default Layout;
+export { UserContext };

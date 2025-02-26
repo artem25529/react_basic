@@ -1,10 +1,10 @@
-import performAPICall from '../utils/performAPICall.js';
+import getResourceAsync from '../utils/getResouceAsync.js';
 
-const USERS_URL = 'http://localhost:3000/posts';
+const USERS_URL = 'http://localhost:3000/users';
 
 const userService = {
-  getUsersByEmail(email, setResponse) {
-    performAPICall(USERS_URL, { email }, 'GET', null, setResponse);
+  async getUsersByFieldsAsync(fields) {
+    return await getResourceAsync(USERS_URL, fields);
   },
 };
 

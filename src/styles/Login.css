@@ -1,0 +1,45 @@
+.login-page {
+  font-size: 1.2em;
+  display: flex;
+  justify-content: center;
+
+  .loader {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background-color: rgb(255, 255, 255, 0.5);
+    backdrop-filter: blur(5px);
+    visibility: hidden;
+  }
+
+  .login-wrapper {
+    margin-top: 3em;
+    border: 1px solid;
+    border-radius: 1em;
+    padding: 1em;
+
+    .form {
+      display: flex;
+      flex-direction: column;
+      .header {
+        font-size: 1.2em;
+        margin-bottom: 1em;
+        align-self: center;
+      }
+    }
+
+    .fields {
+      .field {
+        /* input:user-invalid {
+          background-color: lightcoral;
+        } */
+
+        .err {
+          color: crimson;
+          min-height: 1lh;
+        }
+      }
+    }
+  }
+}

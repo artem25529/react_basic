@@ -1,0 +1,43 @@
+.about {
+  .info {
+    .title {
+    }
+
+    .text {
+    }
+  }
+
+  .top-posts {
+    .title {
+    }
+
+    .content {
+      display: flex;
+      align-items: center;
+
+      .btn {
+        display: none;
+      }
+    }
+
+    .content.slider {
+      .btn {
+        display: block;
+      }
+    }
+
+    .post-list {
+      display: flex;
+      overflow: hidden;
+      li {
+        width: 100%;
+        flex-shrink: 0;
+      }
+
+      li.animated {
+        z-index: 1;
+        transition: translate 0.2s;
+      }
+    }
+  }
+}
