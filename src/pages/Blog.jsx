@@ -1,26 +1,28 @@
-import { useState, memo } from 'react';
+import { useState, useContext } from 'react';
+import { Link } from 'react-router-dom';
+import { UserContext } from './PageWrapper.jsx';
 import SortAndSearch from '../components/SortAndSearch.jsx';
 import PostListWrapper from '../components/PostListWrapper.jsx';
-import { Link } from 'react-router-dom';
+import localStorageService from '../services/localStorageService.js';
 
-function Blog(props) {
-  console.log('render blog');
-  console.log(props.history);
+function Blog() {
+  const { user } = useContext(UserContext);
+
   const [searchParams, setSearchParams] = useState(() => {
-    const query = localStorage.getItem('query');
-    const sort = localStorage.getItem('sort');
-    const order = localStorage.getItem('order');
+    const query = localStorageService.getItemForUser(user, 'query');
+    const sort = localStorageService.getItemForUser(user, 'sort');
+    const order = localStorageService.getItemForUser(user, 'order');
 
     return { query, sort, order };
   });
 
   return (
-    <section className="blog">
+    <section className="blog-page">
       <div className="add-new-post-wrapper">
         <Link to="/new-post">Add new post</Link>
       </div>
       <SortAndSearch
-        query={searchParams.query}
+        searchParams={searchParams}
         setSearchParams={setSearchParams}
       />
       <PostListWrapper searchParams={searchParams} />

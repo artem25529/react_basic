@@ -1,6 +1,6 @@
-import { Link } from 'react-router-dom';
-import { useContext, useEffect } from 'react';
-import { UserContext } from '../pages/Layout.jsx';
+import { Link, NavLink } from 'react-router-dom';
+import { useContext } from 'react';
+import { UserContext } from '../pages/PageWrapper.jsx';
 import '../styles/Header.css';
 
 function Header() {
@@ -13,56 +13,64 @@ function Header() {
 
   return (
     <header className="page-header">
-      <a className="logo-container" href="#">
+      <Link className="logo-container" to="/">
         <img
           className="logo-img"
           src="https://img.icons8.com/pulsar-color/240/chat-message.png"
           alt="site logo"
         />
         <span className="logo-legend">WriteWave</span>
-      </a>
+      </Link>
       <nav className="navigation">
         <ul>
           <li>
-            <Link to="/about">About</Link>
+            <NavLink className="btn" to="/about">
+              About
+            </NavLink>
           </li>
           <li>
-            <Link to="/blog">Blog</Link>
+            <NavLink className="btn" to="/blog">
+              Blog
+            </NavLink>
           </li>
           <li>
-            <Link to="/favorites">Favorites</Link>
+            <NavLink className="btn" to="/favorites">
+              Favorites
+            </NavLink>
           </li>
         </ul>
       </nav>
 
-      <section className="theme-switcher">
-        <div className="theme dark">
-          <div className="theme-label">Dark</div>
-          <span className="material-symbols-outlined">dark_mode</span>
-        </div>
-        <div className="theme light">
-          <div className="theme-label">Light</div>
-          <span className="material-symbols-outlined">light_mode</span>
-        </div>
-      </section>
+      <div className="right-content-wrapper">
+        <section className="theme-switcher">
+          <div className="theme dark btn">
+            <div className="theme-label">Dark</div>
+            <span className="material-symbols-outlined">dark_mode</span>
+          </div>
+          {/* <div className="theme light">
+            <div className="theme-label">Light</div>
+            <span className="material-symbols-outlined">light_mode</span>
+          </div> */}
+        </section>
 
-      {user ? (
-        <section className="user-wrapper">
-          <div className="username">{user}</div>
-          <button onClick={handleLogout} type="button" className="logout">
-            Log Out
-          </button>
-        </section>
-      ) : (
-        <section className="login-wrapper">
-          <Link to="/login" className="login">
-            Log In
-          </Link>
-          <Link to="/signup" className="signup">
-            Sign Up
-          </Link>
-        </section>
-      )}
+        {user ? (
+          <section className="user-wrapper">
+            <div className="username">{user}</div>
+            <button onClick={handleLogout} type="button" className="logout btn">
+              Log Out
+            </button>
+          </section>
+        ) : (
+          <section className="login-wrapper">
+            <Link to="/login" className="login btn">
+              Log In
+            </Link>
+            <Link to="/signup" className="signup btn">
+              Sign Up
+            </Link>
+          </section>
+        )}
+      </div>
     </header>
   );
 }

@@ -5,7 +5,7 @@ import validationService from '../services/validationService';
 import '../styles/Login.css';
 import performAPICallAsync from '../utils/getResouceAsync';
 
-import { UserContext } from '../pages/Layout.jsx';
+import { UserContext } from '../pages/PageWrapper.jsx';
 
 function Login({ isLogin }) {
   const { setUser } = useContext(UserContext);
