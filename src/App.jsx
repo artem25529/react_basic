@@ -2,7 +2,7 @@ import { lazy, Suspense, useState, createContext } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 
-import Layout from './pages/Layout.jsx';
+import PageWrapper from './pages/PageWrapper.jsx';
 import Login from './pages/Login.jsx';
 import NewPost from './pages/NewPost.jsx';
 import Favorites from './pages/Favorites.jsx';
@@ -15,7 +15,7 @@ function App() {
     <>
       <Router>
         <Routes>
-          <Route path="/" element={<Layout />}>
+          <Route path="/" element={<PageWrapper />}>
             <Route
               index
               element={

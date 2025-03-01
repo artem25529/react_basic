@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react';
 import urlUtils from '../utils/urlUtils.js';
 import '../styles/SortAndSearch.css';
 
-function SortAndSearch({ query, setSearchParams }) {
-  const [input, setInput] = useState(query ?? '');
+function SortAndSearch({ searchParams, setSearchParams }) {
+  const [input, setInput] = useState(searchParams.query ?? '');
   const [tOut, setTOut] = useState();
 
   useEffect(() => {
-    if (input !== query) {
+    if (input !== searchParams.query) {
       handleQueryChange();
     }
   }, [input]);

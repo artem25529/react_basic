@@ -1,25 +1,39 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Yellowtail&display=swap')
 layer(lib);
-@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined')
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200')
 layer(lib);
 
 * {
   margin: 0;
   padding: 0;
-
-  appearance: none;
-  list-style-type: none;
-  text-decoration: none;
-  border-style: none;
-
   box-sizing: border-box;
-  resize: none;
 
   font-family: inherit;
   font-size: inherit;
+  font-style: inherit;
   font-weight: inherit;
   line-height: inherit;
   color: inherit;
+}
+
+input,
+textarea,
+button {
+  border-style: none;
+  background-color: unset;
+}
+
+a {
+  text-decoration: none;
+}
+
+ol,
+ul {
+  list-style-type: none;
+}
+
+body {
+  background-image: linear-gradient(transparent, rgb(112, 13, 152));
 }
 
 :root {
@@ -29,33 +43,34 @@ layer(lib);
   font-weight: 400;
   font-style: normal;
   font-variation-settings: 'wdth' 100;
-
   color-scheme: light;
+
   color: var(--color-text);
 
-  --color-background-primary: #9fa8da;
-  --color-background-secondary: #f9fbff;
-  --color-nav-link-text: #9fa8da;
-  --color-nav-link-background: #e5e9ff;
-  --color-logo-text: #191a40;
-  --color-hover-primary: #191a40;
-  --color-hover-secondary: #191a40;
-  --color-active-primary: #191a40;
-  --color-active-secondary: #191a40;
-
-  --color-text: black;
+  --color-shadow: rgba(0, 0, 0, 0.5);
+  --color-text: #1e1e1e;
+  --color-header-text: #121338;
+  --color-header-background: white;
+  --color-header-link-text: #9fa8da;
+  --color-header-link-hover: #9fa8da1c;
+  --color-theme-btn-text: var(--color-header-background);
+  --color-theme-btn-background: #393939;
+  --color-theme-btn-hover: #646464;
+  --color-logout-btn-text: var(--color-header-background);
+  --color-logout-btn-background: #d0d0d0;
+  --color-signup-btn-hover: var(--color-header-link-hover);
+  --color-login-btn-text: var(--color-header-background);
+  --color-login-btn-background: var(--color-header-link-text);
+  --color-login-btn-hover: var(--color-header-link-hover);
 }
 
 :root.scheme-black {
-  --color-background-primary: #9fa8da;
+  color-scheme: black;
+  /* --color-background-primary: #9fa8da;
   --color-background-secondary: #f9fbff;
   --color-nav-link-text: #9fa8da;
   --color-nav-link-background: #eaedff;
-  --color-logo-text: #191a40;
-}
-
-body {
-  background-color: var(--color-background-primary);
+  --color-logo-text: #191a40; */
 }
 
 .hidden {
@@ -72,31 +87,10 @@ body {
 
 .material-symbols-outlined {
   font-family: 'Material Symbols Outlined';
-  line-height: 1;
-  user-select: none;
-  font-size: 1.3em;
-
   font-variation-settings: 'wght' 700, 'FILL' 1;
-  font-weight: normal;
-}
-
-.material-symbols-outlined.disabled {
-  pointer-events: none;
-  opacity: 0.5;
-}
-
-/* .material-symbols-outlined {
-  font-family: 'Material Symbols Outlined';
-  font-weight: normal;
-  font-style: normal;
-  font-size: 24px; 
-  display: inline-block;
+  font-size: 1.3em;
   line-height: 1;
-  text-transform: none;
-  letter-spacing: normal;
-  word-wrap: normal;
-  white-space: nowrap;
-  direction: ltr;
-
-  font-variation-settings: 'wght' 700;
-} */
+  font-weight: normal;
+  user-select: none;
+  color: currentColor;
+}
