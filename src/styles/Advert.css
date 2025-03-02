@@ -1,0 +1,10 @@
+.page-aside {
+  & > .page-advert {
+    position: sticky;
+    top: 10rem;
+
+    img {
+      width: 100%;
+    }
+  }
+}

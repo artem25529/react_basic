@@ -15,14 +15,17 @@
 
     & > .page-main {
       width: 60%;
+      order: 1;
     }
 
     & > .page-aside {
       width: 20%;
+      order: 2;
     }
 
     & > .page-footer {
       width: 20%;
+      order: 0;
     }
   }
 }
