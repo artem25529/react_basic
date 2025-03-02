@@ -1,0 +1,27 @@
+.loader {
+  font-size: 1.2em;
+
+  .loader-back {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    inset: 0;
+    background-color: rgba(211, 211, 211, 0.526);
+    backdrop-filter: blur(5px);
+  }
+
+  .loader-content {
+    display: flex;
+    gap: 0.5em;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .loader-text {
+    font-weight: 600;
+    white-space: nowrap;
+    height: 1lh;
+    overflow: hidden;
+  }
+}

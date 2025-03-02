@@ -1,6 +1,7 @@
 .page-header {
   background-color: rgb(233, 244, 248);
   position: sticky;
+  z-index: 100;
   top: 0;
   font-weight: 550;
   font-size: 1.6em;

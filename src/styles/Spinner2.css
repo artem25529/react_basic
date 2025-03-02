@@ -1,13 +1,13 @@
 .spinner-2 {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.5em;
 
   & > .spinner-dot {
-    width: 0.4rem;
+    width: 0.32em;
     aspect-ratio: 1;
     border-radius: 50%;
     background-color: #7382d9;
-    animation: grow 0.5s ease infinite;
+    animation: grow 0.6s ease infinite;
   }
 }
 
