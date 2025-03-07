@@ -73,6 +73,11 @@ body {
   --color-logo-text: #191a40; */
 }
 
+#root {
+  position: relative;
+  min-height: 100vh;
+}
+
 .hidden {
   display: none;
 }

@@ -1,68 +1,92 @@
-import { lazy, Suspense, useState, createContext } from 'react';
+import { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 
-import PageWrapper from './pages/PageWrapper.jsx';
-import Login from './pages/Login.jsx';
-import NewPost from './pages/NewPost.jsx';
-import Favorites from './pages/Favorites.jsx';
+import PageWrapperSkeleton from './pages/PageWrapperSkeleton.jsx';
+import BlogSkeleton from './pages/BlogSkeleton.jsx';
+import AboutSkeleton from './pages/AboutSkeleton.jsx';
+import NewPostSkeleton from './pages/NewPostSkeleton.jsx';
+import FavoritesSkeleton from './pages/FavoritesSkeleton.jsx';
+import LoginSkeleton from './pages/LoginSkeleton.jsx';
 
+const PageWrapper = lazy(() => import('./pages/PageWrapper.jsx'));
 const Blog = lazy(() => import('./pages/Blog.jsx'));
 const About = lazy(() => import('./pages/About.jsx'));
+const Favorites = lazy(() => import('./pages/Favorites.jsx'));
+const Login = lazy(() => import('./pages/Login.jsx'));
+const NewPost = lazy(() => import('./pages/NewPost.jsx'));
 
 function App() {
   return (
-    <>
-      <Router>
-        <Routes>
-          <Route path="/" element={<PageWrapper />}>
-            <Route
-              index
-              element={
-                <Suspense fallback="loading...">
-                  <Blog />
-                </Suspense>
-              }
-            />
-            <Route
-              path="blog"
-              element={
-                <Suspense fallback="loading...">
-                  <Blog />
-                </Suspense>
-              }
-            />
-            <Route
-              path="about"
-              element={
-                <Suspense fallback="loading...">
-                  <About />
-                </Suspense>
-              }
-            />
-            <Route
-              path="new-post"
-              element={
-                <Suspense fallback="loading...">
-                  <NewPost />
-                </Suspense>
-              }
-            />
-            <Route
-              path="favorites"
-              element={
-                <Suspense fallback="loading...">
-                  <Favorites />
-                </Suspense>
-              }
-            />
-
-            <Route path="login" element={<Login key={1} isLogin={true} />} />
-            <Route path="signup" element={<Login key={2} isLogin={false} />} />
-          </Route>
-        </Routes>
-      </Router>
-    </>
+    <Router>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <Suspense fallback={<PageWrapperSkeleton />}>
+              <PageWrapper />
+            </Suspense>
+          }
+        >
+          <Route
+            index
+            element={
+              <Suspense fallback={<BlogSkeleton />}>
+                <Blog />
+              </Suspense>
+            }
+          />
+          <Route
+            path="blog"
+            element={
+              <Suspense fallback={<BlogSkeleton />}>
+                <Blog />
+              </Suspense>
+            }
+          />
+          <Route
+            path="about"
+            element={
+              <Suspense fallback={<AboutSkeleton />}>
+                <About />
+              </Suspense>
+            }
+          />
+          <Route
+            path="favorites"
+            element={
+              <Suspense fallback={<FavoritesSkeleton />}>
+                <Favorites />
+              </Suspense>
+            }
+          />
+          <Route
+            path="new-post"
+            element={
+              <Suspense fallback={<NewPostSkeleton />}>
+                <NewPost />
+              </Suspense>
+            }
+          />
+          <Route
+            path="login"
+            element={
+              <Suspense fallback={<LoginSkeleton />}>
+                <Login key={1} isLogin={true} />
+              </Suspense>
+            }
+          />
+          <Route
+            path="signup"
+            element={
+              <Suspense fallback={<LoginSkeleton />}>
+                <Login key={2} isLogin={false} />
+              </Suspense>
+            }
+          />
+        </Route>
+      </Routes>
+    </Router>
   );
 }
 
