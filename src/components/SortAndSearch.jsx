@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import urlUtils from '../utils/urlUtils.js';
 import '../styles/SortAndSearch.css';
+import { Link } from 'react-router-dom';
 
 function SortAndSearch({ searchParams, setSearchParams }) {
-  const [input, setInput] = useState(searchParams.query ?? '');
+  const [input, setInput] = useState(searchParams.query);
   const [tOut, setTOut] = useState();
 
   useEffect(() => {
@@ -13,17 +14,16 @@ function SortAndSearch({ searchParams, setSearchParams }) {
   }, [input]);
 
   function handleSortChange(e) {
-    const sortIcon = e.target;
-    const fields = sortIcon.closest('.sort-fields').children;
+    const targetField = e.currentTarget;
+    console.log(targetField);
 
-    for (const field of fields) {
-      const containsSortIcon = field.contains(sortIcon);
+    const sortFields = targetField.closest('.sort-fields').children;
+
+    for (const field of sortFields) {
+      const isSameNode = field.isSameNode(targetField);
       const sortOrder = field.dataset.order;
 
-      field.classList.toggle(
-        'active',
-        containsSortIcon && sortOrder !== 'desc',
-      );
+      field.classList.toggle('active', isSameNode && sortOrder !== 'desc');
 
       if (field.classList.contains('active')) {
         field.dataset.order = sortOrder ? 'desc' : 'asc';
@@ -80,37 +80,42 @@ function SortAndSearch({ searchParams, setSearchParams }) {
 
   return (
     <section className="sort-search-container">
+      <div className="add-new-post-wrapper">
+        <Link to="/new-post">Add new post</Link>
+      </div>
       <div className="sort-wrapper">
         <div className="sort-title">Sorting:</div>
         <div className="sort-fields">
-          <div data-field="views" className="sort-field">
-            <span
-              className="material-symbols-outlined sort"
-              onClick={handleSortChange}
-            >
-              visibility
+          <div
+            data-field="views"
+            className="sort-field"
+            onClick={handleSortChange}
+          >
+            <span className="material-symbols-outlined sort">visibility</span>
+            <span className="material-symbols-outlined placeholder">
+              swap_vert
             </span>
-            <span className="material-symbols-outlined placeholder">North</span>
             <span data-order="asc" className="material-symbols-outlined order">
-              North
+              straight
             </span>
             <span data-order="desc" className="material-symbols-outlined order">
-              South
+              straight
             </span>
           </div>
-          <div data-field="likes" className="sort-field">
-            <span
-              className="material-symbols-outlined sort"
-              onClick={handleSortChange}
-            >
-              thumb_up
+          <div
+            data-field="likes"
+            className="sort-field"
+            onClick={handleSortChange}
+          >
+            <span className="material-symbols-outlined sort">thumb_up</span>
+            <span className="material-symbols-outlined placeholder">
+              swap_vert
             </span>
-            <span className="material-symbols-outlined placeholder">North</span>
             <span data-order="asc" className="material-symbols-outlined order">
-              North
+              straight
             </span>
             <span data-order="desc" className="material-symbols-outlined order">
-              South
+              straight
             </span>
           </div>
         </div>

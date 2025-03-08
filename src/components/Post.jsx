@@ -146,7 +146,7 @@ function Post({ post }) {
               type="submit"
               form="post-form"
             >
-              <span className="material-symbols-outlined">check</span>
+              <span className="material-symbols-outlined">check_circle</span>
             </button>
             <span
               className="material-symbols-outlined"

@@ -1,23 +1,24 @@
-function performAPICall(url, params, method, body, setResponse) {
+function performAPICall(url, params = {}, method = 'GET', body, setResponse) {
   setResponse({
-    isDone: false,
+    pages: null,
     data: null,
     error: null,
-    pages: null,
+    isInProgress: true,
+    isDone: false,
   });
 
+  const urlObj = new URL(url);
+
   for (const key in params) {
-    if (!params[key]) {
-      delete params[key];
+    const value = params[key];
+
+    if (value) {
+      urlObj.searchParams.append(key, value);
     }
   }
 
-  if (Object.keys(params).length > 0) {
-    url = url + '?' + new URLSearchParams(params);
-  }
-
-  fetch(url, {
-    method: method || 'GET',
+  fetch(urlObj, {
+    method: method,
     body: body,
   })
     .then((response) => {
@@ -40,6 +41,7 @@ function performAPICall(url, params, method, body, setResponse) {
         data: json,
         error: null,
         isDone: true,
+        isInProgress: false,
       })),
     )
     .catch((error) =>
@@ -47,20 +49,19 @@ function performAPICall(url, params, method, body, setResponse) {
         data: null,
         error: error,
         isDone: true,
+        isInProgress: false,
       }),
     );
 }
 
 function parseLinkHeader(link) {
-  const res = {};
-
   if (!link) {
-    return res;
+    return null;
   }
 
-  const parts = link.split(', ');
+  const res = {};
 
-  parts.forEach((part) => {
+  link.split(', ').forEach((part) => {
     const linkToRel = part.split('; rel=');
     const match = linkToRel[0].match(/_page=(\d+)/);
 

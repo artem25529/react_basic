@@ -13,7 +13,7 @@ const postService = {
 
     if (searchParams?.sort) {
       params._sort = `statistics.${searchParams.sort}`;
-      params._order = searchParams.order || 'asc';
+      params._order = searchParams?.order || 'asc';
     }
 
     params._page = page || 1;
