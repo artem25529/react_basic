@@ -1,15 +1,14 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, forwardRef } from 'react';
 import '../styles/PopupMessage.css';
 
-function PopupMessage({ message, level }) {
+function PopupMessage({ message, level, callback }, ref) {
   const [isVisible, setIsVisible] = useState(true);
-
   const timeout = useRef();
 
   useEffect(() => {
     timeout.current = setTimeout(() => {
-      setIsVisible(false);
-    }, 3000);
+      closeFunc();
+    }, 5000);
   }, []);
 
   function handleClose() {
@@ -17,19 +16,29 @@ function PopupMessage({ message, level }) {
       clearTimeout(timeout.current);
     }
 
-    setIsVisible(false);
+    closeFunc();
   }
+
+  function closeFunc() {
+    setIsVisible(false);
+
+    if (typeof callback === 'function') {
+      callback();
+    }
+  }
+
   return (
-    <div
-      className={'popup-message' + (level ? ` ${level}` : '')}
-      style={!isVisible ? { display: 'none' } : null}
-    >
-      <div className="popup-content">{message}</div>
-      <div className="popup-close" onClick={handleClose}>
-        &times;
-      </div>
-    </div>
+    <>
+      {isVisible && (
+        <div ref={ref} className={'popup-message' + (level ? ` ${level}` : '')}>
+          <div className="popup-content">{message}</div>
+          <div className="popup-close" onClick={handleClose}>
+            &times;
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
-export default PopupMessage;
+export default forwardRef(PopupMessage);

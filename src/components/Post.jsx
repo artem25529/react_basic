@@ -1,28 +1,44 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 import { UserContext } from '../pages/PageWrapper.jsx';
-
+import Loader from '../components/Loader.jsx';
+import PopupMessage from '../components/PopupMessage.jsx';
 import validationService from '../services/validationService.js';
-
+import postService from '../services/postService.js';
 import '../styles/Post.css';
 
 function Post({ post }) {
   const { user } = useContext(UserContext);
-
-  const postTextRef = useRef();
-
-  const postEditFormRef = useRef();
-
-  const applyBtnRef = useRef();
-  const loaderRef = useRef();
-
   const [isEdit, setIsEdit] = useState(false);
+  const [errors, setErrors] = useState({});
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [successMsg, setSuccessMsg] = useState();
+  const [errorMsg, setErrorMsg] = useState();
 
   const [values, setValues] = useState({
     title: post.title,
     text: post.text,
   });
 
-  const [errors, setErrors] = useState({});
+  const [formValues, setFormValues] = useState({
+    title: values.title,
+    text: values.text,
+  });
+
+  const postEditFormRef = useRef();
+  const postTextRef = useRef();
+  const applyBtnRef = useRef();
+
+  const successPopupRef = useRef();
+  const errorPopupRef = useRef();
+
+  function successPopupCloseCallback() {
+    setSuccessMsg();
+  }
+
+  function errorPopupCloseCallback() {
+    setErrorMsg();
+  }
 
   useEffect(() => {
     if (isEdit) {
@@ -31,9 +47,13 @@ function Post({ post }) {
   }, [isEdit]);
 
   useEffect(() => {
+    setBtnDisabled();
+  }, [formValues]);
+
+  function setBtnDisabled() {
     applyBtnRef.current.disabled =
-      values.title === post.title && values.text === post.text;
-  }, [values]);
+      formValues.title === values.title && formValues.text === values.text;
+  }
 
   function setTextareaHeight() {
     postTextRef.current.style.height = '';
@@ -41,39 +61,61 @@ function Post({ post }) {
   }
 
   function handleValueChange(e) {
-    console.log('change');
-
     setTextareaHeight();
 
     const input = e.target;
-    setValues((prev) => ({ ...prev, [input.name]: input.value }));
+    setFormValues((prev) => ({ ...prev, [input.name]: input.value }));
   }
 
   async function handleFormSubmit(e) {
-    loaderRef.current.style.display = 'grid';
     e.preventDefault();
-    console.log('submit');
 
     if (applyBtnRef.current.disabled) return;
 
-    await validationService.validatePostEditForm(
-      postEditFormRef.current,
-      setErrors,
-    );
+    setIsLoading(true);
 
-    loaderRef.current.style.display = 'none';
+    try {
+      await validationService.validatePostEditForm(
+        postEditFormRef.current,
+        setErrors,
+      );
+    } catch {
+      setErrorMsg(`Error validating post with id ${post.id}.`);
+      return;
+    } finally {
+      setIsLoading(false);
+    }
+
+    if (postEditFormRef.current.checkValidity()) {
+      setIsLoading(true);
+
+      try {
+        await postService.updatePost({
+          id: post.id,
+          title: formValues.title,
+          text: formValues.text,
+        });
+
+        setSuccessMsg(`Post with id ${post.id} updated successfully.`);
+        setValues((prev) => ({ ...prev, ...formValues }));
+        setIsEdit(false);
+      } catch {
+        setErrorMsg(`Error updatinng post with id ${post.id}.`);
+      } finally {
+        setIsLoading(false);
+      }
+    }
   }
 
   function handleEditBtn() {
-    setValues({
-      title: post.title,
-      text: post.text,
-    });
+    setBtnDisabled();
     setErrors({});
     setIsEdit(true);
   }
 
   function handleCancelBtn() {
+    setFormValues({ title: values.title, text: values.text });
+    setErrors({});
     setIsEdit(false);
   }
 
@@ -82,13 +124,30 @@ function Post({ post }) {
       className={'post' + (user ? ' extended' : '') + (isEdit ? ' edit' : '')}
       data-id={post.id}
     >
-      <div ref={loaderRef} className="loader">
-        Loading ...
-      </div>
+      {isLoading && <Loader background={true} text="Processing" spinner={1} />}
+
+      {successMsg && (
+        <PopupMessage
+          ref={successPopupRef}
+          level="success"
+          message={successMsg}
+          callback={successPopupCloseCallback}
+        />
+      )}
+
+      {errorMsg && (
+        <PopupMessage
+          ref={errorPopupRef}
+          level="error"
+          message={errorMsg}
+          callback={errorPopupCloseCallback}
+        />
+      )}
+
       <div className="post-content">
         <form
           ref={postEditFormRef}
-          id="post-form"
+          id={'post-form-' + post.id}
           className="post-content-wrapper"
           onSubmit={handleFormSubmit}
           noValidate
@@ -99,32 +158,32 @@ function Post({ post }) {
               className="post-title"
               type="text"
               name="title"
-              value={values.title}
+              value={formValues.title}
               onChange={handleValueChange}
               required
               minLength="2"
               maxLength="100"
             />
           </header>
-          <div className="err">{errors.title}</div>
+          {errors.title && <div className="err">{errors.title}</div>}
           <textarea
             className="post-text"
             ref={postTextRef}
             name="text"
-            value={values.text}
+            value={formValues.text}
             onChange={handleValueChange}
             required
             minLength="5"
             maxLength="500"
           />
-          <div className="err">{errors.text}</div>
+          {errors.text && <div className="err">{errors.text}</div>}
         </form>
 
         <div id="post-box" className="post-content-wrapper">
           <header className="post-title-wrapper">
-            <h3 className="post-title">{post.title}</h3>
+            <h3 className="post-title">{values.title}</h3>
           </header>
-          <div className="post-text">{post.text}</div>
+          <div className="post-text">{values.text}</div>
         </div>
 
         <div className="post-favorite">
@@ -144,7 +203,7 @@ function Post({ post }) {
               ref={applyBtnRef}
               className="post-form-submit-btn"
               type="submit"
-              form="post-form"
+              form={'post-form-' + post.id}
             >
               <span className="material-symbols-outlined">check_circle</span>
             </button>

@@ -72,7 +72,8 @@ const validationService = {
   },
 
   async validatePostEditForm(form, setErrors) {
-    setErrors({});
+    this.resetFormErrors(form, setErrors);
+
     const isFormValid = this.validateFormElements(form, setErrors);
 
     if (!isFormValid) return;
@@ -83,7 +84,9 @@ const validationService = {
 
     const posts = await postService.getPostsByFieldsAsync({ title });
 
-    if (!posts.length) return;
+    if (!posts.length) {
+      return;
+    }
 
     if (posts[0].id !== postId) {
       const err = 'Post with such title already exists.';
@@ -109,6 +112,14 @@ const validationService = {
     }
 
     return isFormValid;
+  },
+
+  resetFormErrors(form, setErrors) {
+    for (let formElem of form) {
+      formElem.setCustomValidity('');
+    }
+
+    setErrors({});
   },
 };
 

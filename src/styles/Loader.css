@@ -1,18 +1,14 @@
 .loader {
-  font-size: 1.2em;
+  font-size: 1.3em;
 
   .loader-back {
     display: flex;
     justify-content: center;
-    align-items: start;
+    align-items: center;
     position: absolute;
     inset: 0;
     background-color: rgba(211, 211, 211, 0.526);
     backdrop-filter: blur(5px);
-
-    & > .loader-content {
-      margin-top: 45vh;
-    }
   }
 
   .loader-content {
@@ -23,7 +19,7 @@
   }
 
   .loader-text {
-    font-weight: 600;
+    font-weight: 500;
     white-space: nowrap;
     height: 1lh;
     overflow: hidden;

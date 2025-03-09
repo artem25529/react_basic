@@ -5,19 +5,6 @@
   position: relative;
   border: 1px solid;
 
-  & > .loader {
-    position: absolute;
-    inset: 0;
-    background-color: rgba(0, 0, 0, 0.3);
-    display: none;
-    place-items: center;
-  }
-
-  button:disabled {
-    pointer-events: none;
-    opacity: 0.5;
-  }
-
   .err {
     color: crimson;
   }
@@ -49,7 +36,7 @@
     & > .post-favorite {
     }
 
-    & > #post-form {
+    & > [id^='post-form'] {
       display: none;
     }
 
@@ -140,7 +127,7 @@
 
 .post.extended.edit {
   & > .post-content {
-    & > #post-form {
+    & > [id^='post-form'] {
       display: block;
     }
 

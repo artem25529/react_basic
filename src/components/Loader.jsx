@@ -2,7 +2,7 @@ import Spinner1 from './Spinner1.jsx';
 import Spinner2 from './Spinner2.jsx';
 import '../styles/Loader.css';
 
-function Loader({ text, spinner, background }) {
+function Loader({ text, spinner, background, contentStyle }) {
   if (!text && !spinner) {
     return null;
   }
@@ -11,7 +11,7 @@ function Loader({ text, spinner, background }) {
     <div className="loader">
       {background === true ? (
         <div className="loader-back">
-          <div className="loader-content">
+          <div className="loader-content" style={contentStyle}>
             {text && <div className="loader-text">{text}</div>}
             {spinner === 1 && <Spinner1 />}
             {spinner === 2 && (

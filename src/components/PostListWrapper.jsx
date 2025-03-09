@@ -95,7 +95,12 @@ function PostListWrapper({ searchParams }) {
       {postList.length > 0 && <PostList posts={postList} ref={setLastPost} />}
 
       {response.isInProgress && (
-        <Loader background={page <= 1} text="Loading posts..." spinner={1} />
+        <Loader
+          background={page <= 1}
+          text="Loading posts"
+          spinner={1}
+          contentStyle={{ position: 'fixed', top: '45vh' }}
+        />
       )}
 
       {response.isDone && response.data && postList.length === 0 && (

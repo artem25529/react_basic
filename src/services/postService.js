@@ -25,6 +25,17 @@ const postService = {
   async getPostsByFieldsAsync(fields) {
     return await getResourceAsync(POSTS_URL, fields);
   },
+
+  async updatePost(post) {
+    const response = await fetch(`${POSTS_URL}/${post.id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(post),
+
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    return await response.json();
+  },
 };
 
 export default postService;
