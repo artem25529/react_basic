@@ -22,7 +22,7 @@ function Loader({ text, spinner, background, contentStyle }) {
           </div>
         </div>
       ) : (
-        <div className="loader-content">
+        <div className="loader-content" style={contentStyle}>
           {text && <div className="loader-text">{text}</div>}
           {spinner === 1 && <Spinner1 />}
           {spinner === 2 && (

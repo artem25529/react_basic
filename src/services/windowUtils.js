@@ -4,7 +4,7 @@ const windowUtils = {
   },
 
   scrollDown() {
-    window.scrollY = window.scrollMaxY;
+    window.scrollTo({ top: window.scrollMaxY });
   },
 };
 

@@ -85,7 +85,7 @@ function PostListWrapper({ searchParams }) {
     if (response.isInProgress && page > 1) {
       windowUtils.scrollDown();
     }
-  }, []);
+  }, [response, page]);
   return (
     <>
       {response.isDone && response.error && (
@@ -99,7 +99,11 @@ function PostListWrapper({ searchParams }) {
           background={page <= 1}
           text="Loading posts"
           spinner={1}
-          contentStyle={{ position: 'fixed', top: '45vh' }}
+          contentStyle={
+            page <= 1
+              ? { position: 'fixed', top: '45vh' }
+              : { paddingBlock: '0.2em 0.6em' }
+          }
         />
       )}
 
