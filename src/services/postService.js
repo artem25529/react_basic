@@ -36,6 +36,14 @@ const postService = {
 
     return await response.json();
   },
+
+  async deletePost(id) {
+    const response = await fetch(`${POSTS_URL}/${id}`, {
+      method: 'DELETE',
+    });
+
+    return await response.json();
+  },
 };
 
 export default postService;
