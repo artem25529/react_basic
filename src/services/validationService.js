@@ -29,44 +29,36 @@ const validationService = {
     return err;
   },
 
-  async validateLoginForm(form, setErrors) {
-    if (!form.checkValidity()) {
-      setErrors();
+  async validateLoginForm(form, isLogin, setErrors) {
+    this.resetFormErrors(form, setErrors);
 
-      for (const input of form) {
-        if (input.nodeName === 'INPUT' && input.name) {
-          const err = this.checkAttributeConstraints(input);
-          if (err) {
-            setErrors((prev) => ({ ...prev, [input.name]: err }));
-          }
-        }
+    const isFormValid = this.validateFormElements(form, setErrors);
+
+    if (!isFormValid) return;
+
+    const emailInput = form.email;
+    const passwordInput = form.password;
+
+    if (isLogin) {
+      const users = await userService.getUsersByFieldsAsync({
+        email: emailInput.value,
+        password: passwordInput.value,
+      });
+
+      if (!users[0]) {
+        const err = 'No match for such email and password.';
+        setErrors((prev) => ({ ...prev, [passwordInput.name]: err }));
+        passwordInput.setCustomValidity(err);
       }
     } else {
-      const isLogin = form.dataset.isLogin;
-      const emailInput = form.email;
-      const passwordInput = form.password;
+      const users = await userService.getUsersByFieldsAsync({
+        email: emailInput.value,
+      });
 
-      if (isLogin) {
-        const users = await userService.getUsersByFieldsAsync({
-          email: emailInput.value,
-          password: passwordInput.value,
-        });
-
-        if (!users[0]) {
-          const err = 'No match for such email and password.';
-          setErrors((prev) => ({ ...prev, [passwordInput.name]: err }));
-          passwordInput.setCustomValidity(err);
-        }
-      } else {
-        const users = await userService.getUsersByFieldsAsync({
-          email: emailInput.value,
-        });
-
-        if (users[0]) {
-          const err = 'User with such an email already exists.';
-          setErrors((prev) => ({ ...prev, [emailInput.name]: err }));
-          emailInput.setCustomValidity(err);
-        }
+      if (users[0]) {
+        const err = 'User with such an email already exists.';
+        setErrors((prev) => ({ ...prev, [emailInput.name]: err }));
+        emailInput.setCustomValidity(err);
       }
     }
   },

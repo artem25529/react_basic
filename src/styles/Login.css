@@ -2,16 +2,7 @@
   font-size: 1.2em;
   display: flex;
   justify-content: center;
-
-  .loader {
-    position: absolute;
-    inset: 0;
-    display: grid;
-    place-items: center;
-    background-color: rgb(255, 255, 255, 0.5);
-    backdrop-filter: blur(5px);
-    visibility: hidden;
-  }
+  position: relative;
 
   .login-wrapper {
     margin-top: 3em;

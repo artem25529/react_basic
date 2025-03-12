@@ -13,17 +13,10 @@ function FullscreenPopup({ children }) {
     };
   }, [children]);
 
-  useEffect(() => {
-    console.log(children, 'children');
-  });
   return (
-    <>
-      {children && (
-        <div className="fullscreen-popup">
-          <div className="fullscreen-popup-content">{children}</div>
-        </div>
-      )}
-    </>
+    <div className="fullscreen-popup">
+      <div className="fullscreen-popup-content">{children}</div>
+    </div>
   );
 }
 

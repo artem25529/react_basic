@@ -1,10 +1,10 @@
 import { Link, NavLink } from 'react-router-dom';
 import { useContext } from 'react';
-import { UserContext } from '../pages/PageWrapper.jsx';
+import { PageWrapperContext } from '../pages/PageWrapper.jsx';
 import '../styles/Header.css';
 
 function Header() {
-  const { user, setUser } = useContext(UserContext);
+  const { user, setUser } = useContext(PageWrapperContext);
 
   function handleLogout() {
     localStorage.removeItem('loggedInUser');

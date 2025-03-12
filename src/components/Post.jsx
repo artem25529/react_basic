@@ -1,17 +1,14 @@
 import { useContext, useEffect, useRef, useState } from 'react';
-import { UserContext } from '../pages/PageWrapper.jsx';
-import { BlogContext } from '../pages/Blog.jsx';
+import { PageWrapperContext } from '../pages/PageWrapper.jsx';
 import Loader from '../components/Loader.jsx';
-import PopupMessage from '../components/PopupMessage.jsx';
 import validationService from '../services/validationService.js';
 import postService from '../services/postService.js';
 
 import '../styles/Post.css';
 
 function Post({ post }) {
-  const { user } = useContext(UserContext);
-  const { setErrorMsg, setSuccessMsg, setFullscreenPopupContent } =
-    useContext(BlogContext);
+  const { user, setErrorMsg, setSuccessMsg, setFullscreenPopupContent } =
+    useContext(PageWrapperContext);
 
   const [isDeleted, setIsDeleted] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
@@ -32,8 +29,6 @@ function Post({ post }) {
   const postEditFormRef = useRef();
   const postTextRef = useRef();
   const applyBtnRef = useRef();
-  const fullscreenPopupDeleteBtnRef = useRef();
-  const fullscreenPopupCancelBtnRef = useRef();
 
   useEffect(() => {
     if (isEdit) {

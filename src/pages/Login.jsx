@@ -1,27 +1,38 @@
 import { useState, useRef, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
-import validationService from '../services/validationService';
+import { useNavigate, Link } from 'react-router-dom';
+import { PageWrapperContext } from '../pages/PageWrapper.jsx';
+import Loader from '../components/Loader.jsx';
+import validationService from '../services/validationService.js';
+import userService from '../services/userService.js';
 import '../styles/Login.css';
-import performAPICallAsync from '../utils/getResouceAsync';
-
-import { UserContext } from '../pages/PageWrapper.jsx';
 
 function Login({ isLogin }) {
-  const { setUser } = useContext(UserContext);
   const navigate = useNavigate();
-  const formRef = useRef();
-  const loaderRef = useRef();
-  console.log('render login');
+
+  const {
+    setUser,
+    setErrorMsg,
+    setSuccessMsg,
+    setSuccessMsgCallback,
+    setSuccessMsgMillis,
+  } = useContext(PageWrapperContext);
+
+  const [values, setValues] = useState({ email: '', password: '' });
+  const [errors, setErrors] = useState({});
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const loginFormRef = useRef();
+
+  function successCallback() {
+    navigate('/blog');
+  }
 
   const title = isLogin ? 'Log in' : 'Sign up';
 
   const msg = isLogin
     ? "Don't have an account yet? Please, click "
-    : 'Do you already have an account? Please, click ';
-
-  const [values, setValues] = useState({ email: '', password: '' });
-  const [errors, setErrors] = useState({ email: '', password: '' });
+    : 'Have an account already? Please, click ';
 
   function handleValueChange(e) {
     const input = e.target;
@@ -29,76 +40,109 @@ function Login({ isLogin }) {
   }
 
   async function handleSubmit(e) {
-    loaderRef.current.style.visibility = 'visible';
     e.preventDefault();
-    await validationService.validateLoginForm(e.target, setErrors);
 
-    loaderRef.current.style.visibility = 'hidden';
+    setIsLoading(true);
 
-    if (formRef.current.checkValidity()) {
-      localStorage.setItem('loggedInUser', values.email);
-      setUser(values.email);
-      navigate('/');
+    try {
+      await validationService.validateLoginForm(
+        loginFormRef.current,
+        isLogin,
+        setErrors,
+      );
+
+      if (loginFormRef.current.checkValidity()) {
+        if (isLogin) {
+          setUser(values.email);
+          setSuccessMsg("You've logged in successfully!");
+          setSuccessMsgCallback(successCallback);
+          setSuccessMsgMillis(1000);
+        } else {
+          await userService.createUser(values.email, values.password);
+          setUser(values);
+          setSuccessMsg("You've created a user successfully!");
+          setSuccessMsgCallback(successCallback);
+          setSuccessMsgMillis(1000);
+        }
+      }
+    } catch {
+      setErrorMsg(`Error ${isLogin ? 'authenticating' : 'creating'} a user.`);
+    } finally {
+      setIsLoading(false);
     }
   }
 
   return (
-    <div className="login-page">
-      <div ref={loaderRef} className="loader">
-        Processing...
-      </div>
+    <section className="login-page">
+      {isLoading && (
+        <Loader
+          text={(isLogin ? 'Authenticating' : 'Creating') + ' a user'}
+          spinner={2}
+          background={true}
+        />
+      )}
+
       <div className="login-wrapper">
+        <header className="login-title">
+          <h2>{title}</h2>
+        </header>
         <form
-          ref={formRef}
-          className="form"
+          ref={loginFormRef}
+          className="login-form"
           noValidate
-          data-is-login={isLogin}
           onSubmit={handleSubmit}
         >
-          <h3 className="header">{title}</h3>
-          <div className="fields">
-            <div className="field">
+          <div className="login-fields">
+            <div className="login-field">
               <label htmlFor="email">Email address</label>
               <input
                 value={values.email}
                 onChange={handleValueChange}
                 type="email"
-                id="email"
                 name="email"
                 placeholder="Email"
                 required
+                minLength="5"
+                maxLength="30"
               />
-              <div className="err">{errors.email}</div>
+              {errors.email && (
+                <>
+                  <div className="login-err">{errors.email}</div>
+                </>
+              )}
             </div>
-            <div className="field">
+            <div className="login-field">
               <label htmlFor="password">Password</label>
               <input
                 value={values.password}
                 onChange={handleValueChange}
                 type="password"
-                id="password"
                 name="password"
                 placeholder="Password"
                 required
-                minLength="4"
+                minLength="5"
                 maxLength="20"
               />
-              <div className="err">{errors.password}</div>
+              {errors.password && (
+                <>
+                  <div className="login-err">{errors.password}</div>
+                </>
+              )}
             </div>
           </div>
-          <div className="legend">
+          <div className="login-legend">
             {msg}
             <Link to={isLogin ? '/signup' : '/login'}>here</Link>
             {'!'}
           </div>
-          <div className="submit">
-            <button type="submit" className="submit">
+          <div className="login-submit">
+            <button type="submit" className="login-submit">
               {title}
             </button>
           </div>
         </form>
       </div>
-    </div>
+    </section>
   );
 }
 
