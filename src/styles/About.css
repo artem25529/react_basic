@@ -1,43 +1,81 @@
-.about {
-  .info {
-    .title {
+.about-page {
+  padding-inline: 3em;
+
+  & > .about-wrapper {
+    & > .title {
     }
 
-    .text {
+    & > .text {
     }
   }
 
-  .top-posts {
-    .title {
+  & > .about-top-posts {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+
+    & > .title {
     }
 
-    .content {
+    & > .content {
       display: flex;
       align-items: center;
+      gap: 1em;
 
-      .btn {
+      & > .btn {
         display: none;
       }
-    }
 
-    .content.slider {
-      .btn {
-        display: block;
+      & > .post-list {
+        flex-grow: 1;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+
+        & > li {
+          flex-shrink: 0;
+          width: 100%;
+          animation: 0.5s both;
+
+          &.move-right {
+            animation-name: moveRight;
+          }
+
+          &.move-left {
+            animation-name: moveLeft;
+          }
+
+          & > .post {
+            margin: 0;
+
+            & > .post-controls {
+              display: none;
+            }
+          }
+        }
+      }
+
+      &.slider {
+        & > .btn {
+          display: block;
+        }
       }
     }
+  }
+}
 
-    .post-list {
-      display: flex;
-      overflow: hidden;
-      li {
-        width: 100%;
-        flex-shrink: 0;
-      }
+@keyframes moveLeft {
+  to {
+    transform: translate(-100%);
+  }
+}
 
-      li.animated {
-        z-index: 1;
-        transition: translate 0.2s;
-      }
-    }
+@keyframes moveRight {
+  from {
+    transform: translate(-100%);
+  }
+
+  to {
+    transform: translate(0);
   }
 }

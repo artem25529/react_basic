@@ -1,75 +1,108 @@
-import { useEffect, useState } from 'react';
-import postService from '../services/postService.js';
+import { useEffect, useState, useContext, useRef } from 'react';
+import { PageWrapperContext } from './PageWrapper.jsx';
 import PostList from '../components/PostList.jsx';
-
+import Loader from '../components/Loader.jsx';
+import postService from '../services/postService.js';
 import '../styles/About.css';
 
+const INTERVAL = 3000;
+
 function About() {
+  const { setErrorMsg } = useContext(PageWrapperContext);
+
   const [response, setResponse] = useState({
     pages: null,
     data: null,
     error: null,
+    isInProgress: false,
     isDone: false,
   });
 
-  useEffect(() => {
-    const searchParams = {
-      sort: 'statistics.views',
-      order: 'desc',
-    };
+  const [postList, setPostList] = useState([]);
 
-    postService.getPosts(searchParams, 1, 3, setResponse);
+  const nextBtnRef = useRef();
+  const interval = useRef();
+
+  useEffect(() => {
+    postService.getPosts({ sort: 'views', order: 'desc' }, 1, 3, setResponse);
   }, []);
 
+  useEffect(() => {
+    if (response.isDone) {
+      if (response.error) {
+        setErrorMsg('Error loading posts');
+      } else if (response.data) {
+        setPostList(response.data);
+      }
+    }
+  }, [response]);
+
+  useEffect(() => {
+    if (postList.length > 1) {
+      interval.current = setInterval(intervalFunc, INTERVAL);
+    }
+  }, [postList]);
+
+  function intervalFunc() {
+    nextBtnRef.current.click();
+  }
+
   function handleButtonClick(e) {
+    if (e.clientX && e.clientY) {
+      if (interval.current) {
+        clearInterval(interval.current);
+      }
+
+      interval.current = setInterval(intervalFunc, INTERVAL);
+    }
+
     const btn = e.target;
     const isNextBtn = btn.classList.contains('next');
 
-    const postList = document.querySelector('.post-list');
-    const activeItem = postList.firstElementChild;
-    const postWidth = activeItem.getBoundingClientRect().width;
-    const postListWidth = postWidth * postList.childElementCount;
+    const postList = btn.parentElement.querySelector('.post-list');
+    const posts = [...postList.children];
 
-    const targetItem = isNextBtn
-      ? activeItem.nextElementSibling
+    const activePost = postList.firstElementChild;
+    const targetPost = isNextBtn
+      ? activePost.nextElementSibling
       : postList.lastElementChild;
 
-    if (!isNextBtn) {
-      targetItem.style.translate = `-${postListWidth}px`;
-
-      setTimeout(() => {
-        targetItem.classList.add('animated');
-        targetItem.style.translate = `-${postListWidth - postWidth}px`;
-      }, 1);
+    if (isNextBtn) {
+      posts.forEach((post) => post.classList.add('move-left'));
     } else {
-      targetItem.classList.add('animated');
-      targetItem.style.translate = `-${postWidth}px`;
+      postList.prepend(targetPost);
+      posts.forEach((post) => post.classList.add('move-right'));
     }
 
-    activeItem.classList.add('animated');
-    activeItem.style.translate = `${isNextBtn ? '-' : ''}${postWidth}px`;
+    targetPost.onanimationend = handleAnimationEnd;
 
-    targetItem.ontransitionend = handletransitionEnd;
-
-    function handletransitionEnd() {
-      activeItem.classList.remove('animated');
-      targetItem.classList.remove('animated');
-      targetItem.style.translate = '';
-      activeItem.style.translate = '';
-
-      postList.prepend(targetItem);
+    function handleAnimationEnd() {
+      posts.forEach((post) => {
+        post.classList.remove('move-right');
+        post.classList.remove('move-left');
+      });
 
       if (isNextBtn) {
-        postList.append(activeItem);
+        postList.append(activePost);
+        postList.prepend(targetPost);
       }
+
+      targetPost.onanimationend = null;
     }
   }
 
-  const dataLength = response.data ? response.data.length : 0;
-
   return (
-    <div className="about">
-      <div className="info">
+    <div className="about-page">
+      {response.isInProgress && (
+        <Loader
+          text="Loading"
+          background={true}
+          spinner={1}
+          contentStyle={{ position: 'fixed', top: '45vh' }}
+        />
+      )}
+
+      <div className="about-wrapper">
         <div className="title">About Me</div>
         <div className="text">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Porro
@@ -86,23 +119,31 @@ function About() {
           recusandae, id quo beatae?
         </div>
       </div>
-      {!response.isDone && <div>Loading...</div>}
 
-      {dataLength > 0 && (
-        <div className="top-posts">
+      {postList.length > 0 && (
+        <div className="about-top-posts">
           <div className="title">
-            {dataLength === 1
+            {postList.length === 1
               ? 'Most populat post'
-              : `Top ${dataLength} popular posts`}
+              : `Top ${postList.length} popular posts`}
           </div>
-          <div className={`content${dataLength > 1 ? ' slider' : ''}`}>
-            <div className="btn prev" onClick={handleButtonClick}>
+          <div className={`content${postList.length > 1 ? ' slider' : ''}`}>
+            <button
+              type="button"
+              className="btn prev"
+              onClick={handleButtonClick}
+            >
               prev
-            </div>
-            <PostList posts={Object.values(response.data)} />
-            <div className="btn next" onClick={handleButtonClick}>
+            </button>
+            <PostList posts={postList} />
+            <button
+              ref={nextBtnRef}
+              type="button"
+              className="btn next"
+              onClick={handleButtonClick}
+            >
               next
-            </div>
+            </button>
           </div>
         </div>
       )}
