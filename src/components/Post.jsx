@@ -5,15 +5,21 @@ import validationService from '../services/validationService.js';
 import postService from '../services/postService.js';
 
 import '../styles/Post.css';
+import userService from '../services/userService.js';
 
 function Post({ post }) {
-  const { user, setErrorMsg, setSuccessMsg, setFullscreenPopupContent } =
-    useContext(PageWrapperContext);
+  const {
+    user,
+    favorites,
+    setFavorites,
+    setErrorMsg,
+    setSuccessMsg,
+    setFullscreenPopupContent,
+  } = useContext(PageWrapperContext);
 
   const [isDeleted, setIsDeleted] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [errors, setErrors] = useState({});
-
   const [isLoading, setIsLoading] = useState(false);
 
   const [values, setValues] = useState({
@@ -157,6 +163,16 @@ function Post({ post }) {
     setFullscreenPopupContent();
   }
 
+  function handleFavClick() {
+    if (user) {
+      if (favorites.includes(post.id)) {
+        setFavorites((prev) => [...prev].filter((f) => f !== post.id));
+      } else {
+        setFavorites((prev) => [...prev, post.id]);
+      }
+    }
+  }
+
   return (
     <>
       {!isDeleted && (
@@ -213,7 +229,15 @@ function Post({ post }) {
             </div>
 
             <div className="post-favorite">
-              <span className="material-symbols-outlined">favorite</span>
+              <span
+                className={`${
+                  'material-symbols-outlined' +
+                  (favorites.includes(post.id) ? ' active' : '')
+                }`}
+                onClick={handleFavClick}
+              >
+                favorite
+              </span>
             </div>
           </div>
 

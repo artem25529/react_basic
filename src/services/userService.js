@@ -1,4 +1,5 @@
 import getResourceAsync from '../utils/getResouceAsync.js';
+import performAPICall from '../utils/performAPICall.js';
 
 const USERS_URL = 'http://localhost:3000/users';
 
@@ -16,6 +17,14 @@ const userService = {
     });
 
     return await response.json();
+  },
+
+  getUser(email, setResponse) {
+    performAPICall(USERS_URL, { email }, 'GET', null, setResponse);
+  },
+
+  updateUser(user, setResponse) {
+    //performAPICall(USERS_URL, { email }, 'PATCH', null, setResponse);
   },
 };
 

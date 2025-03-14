@@ -25,6 +25,10 @@ function About() {
 
   useEffect(() => {
     postService.getPosts({ sort: 'views', order: 'desc' }, 1, 3, setResponse);
+
+    return () => {
+      clearInterval(interval.current);
+    };
   }, []);
 
   useEffect(() => {

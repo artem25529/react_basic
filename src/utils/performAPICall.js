@@ -7,6 +7,12 @@ function performAPICall(url, params = {}, method = 'GET', body, setResponse) {
     isDone: false,
   });
 
+  const headers = {};
+
+  if (body) {
+    headers['Content-Type'] = 'application/json';
+  }
+
   const urlObj = new URL(url);
 
   for (const key in params) {
@@ -18,8 +24,9 @@ function performAPICall(url, params = {}, method = 'GET', body, setResponse) {
   }
 
   fetch(urlObj, {
-    method: method,
-    body: body,
+    method,
+    body,
+    headers,
   })
     .then((response) => {
       if (!response.ok) {

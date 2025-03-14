@@ -7,11 +7,14 @@ import FullscreenPopup from '../components/FullscreenPopup.jsx';
 import Advert from '../components/Advert.jsx';
 import themeService from '../services/themeService.js';
 import '../styles/PageWrapper.css';
+import userService from '../services/userService.js';
+import Loader from '../components/Loader.jsx';
 
 const PageWrapperContext = createContext();
 
 function PageWrapper() {
   const [user, setUser] = useState(localStorage.getItem('loggedInUser'));
+  const [favorites, setFavorites] = useState([]);
 
   const [successMsg, setSuccessMsg] = useState();
   const [successMsgMillis, setSuccessMsgMillis] = useState();
@@ -22,6 +25,14 @@ function PageWrapper() {
   const [errorMsgCallback, setErrorMsgCallback] = useState();
 
   const [fullscreenPopupContent, setFullscreenPopupContent] = useState();
+
+  const [response, setResponse] = useState({
+    pages: null,
+    data: null,
+    error: null,
+    isInProgress: false,
+    isDone: false,
+  });
 
   function successPopupResetCallback() {
     setSuccessMsg();
@@ -38,13 +49,33 @@ function PageWrapper() {
   useEffect(() => {
     localStorage.setItem('loggedInUser', user);
     themeService.applyCurrentTheme(user);
+
+    if (user) {
+      userService.getUser(user, setResponse);
+    }
   }, [user]);
+
+  useEffect(() => {
+    if (response.isDone) {
+      if (response.error) {
+        setErrorMsg('Error loading a user');
+      } else if (response.data) {
+        if (response.data.length === 0) {
+          setErrorMsg(`User ${user} not found`);
+        } else {
+          setFavorites(response.data[0].favorites ?? []);
+        }
+      }
+    }
+  }, [response]);
 
   return (
     <PageWrapperContext.Provider
       value={{
         user,
         setUser,
+        favorites,
+        setFavorites,
         setSuccessMsg,
         setSuccessMsgCallback,
         setSuccessMsgMillis,
@@ -83,6 +114,15 @@ function PageWrapper() {
       )}
 
       <section className="page-wrapper">
+        {response.isInProgress && (
+          <Loader
+            contentStyle={{ position: 'fixed', top: '45vh' }}
+            text="Loading data"
+            spinner={2}
+            background={true}
+          />
+        )}
+
         <Header />
         <div className="page-content-wrapper">
           <Advert />
