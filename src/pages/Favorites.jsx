@@ -1,55 +1,215 @@
-import { useEffect, useState } from 'react';
-import PostList from '../components/PostList';
-import postService from '../services/postService';
+import { useContext, useEffect, useState } from 'react';
+import { PageWrapperContext } from './PageWrapper.jsx';
+import PostList from '../components/PostList.jsx';
+import Loader from '../components/Loader.jsx';
+import postService from '../services/postService.js';
 import '../styles/Favorites.css';
 
-function Favorites() {
-  const [postList, setPostList] = useState([]);
+const MAX_PAGE_LINKS = 7;
+const LINKS_AROUND_CURRENT = Math.floor((MAX_PAGE_LINKS - 2) / 2);
 
-  const [page, setPage] = useState(1);
+function Favorites() {
+  const { favorites, setErrorMsg } = useContext(PageWrapperContext);
+
+  const [postList, setPostList] = useState([]);
+  const [page, setPage] = useState(+1);
+  const [pageNumbers, setPageNumbers] = useState([]);
 
   const [response, setResponse] = useState({
     pages: null,
     data: null,
     error: null,
+    isInProgress: false,
     isDone: false,
   });
 
   useEffect(() => {
-    postService.getPosts(null, page, 5, setResponse);
+    if (favorites?.length > 0) {
+      const params = {
+        _page: page,
+        _limit: 3,
+        id_like: `^(${favorites.join('|')})$`,
+      };
+
+      postService.getPostsWUrlParams(params, setResponse);
+    }
   }, [page]);
 
   useEffect(() => {
-    if (response.isDone && response.data) {
-      setPostList(response.data);
+    if (response.isDone) {
+      if (response.error) {
+        setErrorMsg('Error loading posts.');
+      } else if (response.data) {
+        setPostList(response.data);
+
+        setPagination();
+      }
     }
   }, [response]);
 
-  let pagination;
+  function setPagination() {
+    if (response.pages) {
+      const curPage = +page;
+      const pageNumbersTemp = [];
 
-  if (response.pages) {
-    const pageNumbers = [];
+      if (response.pages.last <= MAX_PAGE_LINKS) {
+        for (let i = 1; i <= response.pages.last; i++) {
+          pageNumbersTemp.push(i);
+        }
+      } else {
+        let secondLink =
+          curPage - LINKS_AROUND_CURRENT <= 1
+            ? 2
+            : curPage - LINKS_AROUND_CURRENT;
 
-    for (let i = 1; i <= response.pages.last; i++) {
-      pageNumbers.push(i);
+        let lastButOneLink =
+          curPage + LINKS_AROUND_CURRENT >= response.pages.last
+            ? response.pages.last - 1
+            : curPage + LINKS_AROUND_CURRENT;
+
+        if (curPage - LINKS_AROUND_CURRENT <= 1) {
+          const res = curPage - LINKS_AROUND_CURRENT;
+
+          for (let i = res; i <= 1; i++) {
+            lastButOneLink++;
+          }
+        }
+
+        if (curPage + LINKS_AROUND_CURRENT >= response.pages.last) {
+          const res = curPage + LINKS_AROUND_CURRENT;
+
+          for (let i = response.pages.last; i <= res; i++) {
+            secondLink--;
+          }
+        }
+
+        pageNumbersTemp.push(1);
+
+        for (let i = secondLink; i <= lastButOneLink; i++) {
+          pageNumbersTemp.push(i);
+        }
+
+        pageNumbersTemp.push(response.pages.last);
+
+        if (pageNumbersTemp[1] - pageNumbersTemp[0] > 1) {
+          pageNumbersTemp.splice(1, 0, '...');
+        }
+
+        if (pageNumbersTemp.at(-1) - pageNumbersTemp.at(-2) > 1) {
+          pageNumbersTemp.splice(-1, 0, '...');
+        }
+      }
+
+      setPageNumbers(pageNumbersTemp);
+    } else {
+      setPageNumbers([]);
+    }
+  }
+
+  function handlePageChange(e) {
+    const targetPage = +e.currentTarget.dataset.pageNum;
+
+    if (
+      !targetPage ||
+      targetPage === page ||
+      targetPage < 1 ||
+      targetPage > response.pages.last
+    ) {
+      return;
     }
 
-    pagination = (
-      <section className="pagination">
-        {pageNumbers.map((n) => (
-          <div key={n} className="page-link">
-            {n}
-          </div>
-        ))}
-      </section>
-    );
+    setPage(targetPage);
   }
 
   return (
     <section className="favorites-page">
+      {response.isInProgress && (
+        <Loader
+          text="Loading posts"
+          spinner={2}
+          background={true}
+          contentStyle={{ position: 'fixed', top: '45vh' }}
+        />
+      )}
+
+      <div className="favorites-title">
+        {favorites?.length > 0
+          ? 'Your favorite posts.'
+          : "You don't have favorite posts yet."}
+      </div>
+
       {postList.length > 0 && <PostList posts={postList} />}
-      {!response.isDone && 'Loading...'}
-      {pagination && pagination}
+
+      {pageNumbers?.length > 0 && (
+        <section className="favorites-pagination">
+          <div
+            className={
+              'page-num arrow fast' +
+              (page === pageNumbers[0] ? ' disabled' : '')
+            }
+            data-page-num={pageNumbers[0]}
+            onClick={handlePageChange}
+          >
+            <span
+              style={{ transform: 'rotate(180deg)' }}
+              className="material-symbols-outlined"
+            >
+              last_page
+            </span>
+          </div>
+
+          <div
+            className={
+              'page-num arrow' + (page === pageNumbers[0] ? ' disabled' : '')
+            }
+            data-page-num={page - 1}
+            onClick={handlePageChange}
+          >
+            <span
+              style={{ transform: 'rotate(180deg)' }}
+              className="material-symbols-outlined"
+            >
+              chevron_forward
+            </span>
+          </div>
+
+          {pageNumbers.map((val) => (
+            <div
+              data-page-num={typeof val === 'number' ? val : undefined}
+              key={val}
+              className={
+                typeof val === 'number'
+                  ? 'page-num' + (page === val ? ' active' : '')
+                  : 'dots'
+              }
+              onClick={handlePageChange}
+            >
+              {val}
+            </div>
+          ))}
+
+          <div
+            className={
+              'page-num arrow' +
+              (page === pageNumbers.at(-1) ? ' disabled' : '')
+            }
+            data-page-num={+page + 1}
+            onClick={handlePageChange}
+          >
+            <span className="material-symbols-outlined">chevron_forward</span>
+          </div>
+          <div
+            className={
+              'page-num arrow fast' +
+              (page === pageNumbers.at(-1) ? ' disabled' : '')
+            }
+            data-page-num={pageNumbers.at(-1)}
+            onClick={handlePageChange}
+          >
+            <span className="material-symbols-outlined">last_page</span>
+          </div>
+        </section>
+      )}
     </section>
   );
 }

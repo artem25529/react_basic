@@ -75,8 +75,10 @@ function parseLinkHeader(link) {
     const page = match[1];
     const rel = linkToRel[1].replaceAll('"', '');
 
-    res[rel] = page;
+    res[rel] = +page;
   });
+
+  console.log(res);
 
   return res;
 }

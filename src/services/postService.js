@@ -22,6 +22,10 @@ const postService = {
     performAPICall(POSTS_URL, params, 'GET', null, setResponse);
   },
 
+  getPostsWUrlParams(urlParams = {}, setResponse) {
+    performAPICall(POSTS_URL, urlParams, 'GET', null, setResponse);
+  },
+
   async getPostsByFieldsAsync(fields) {
     return await getResourceAsync(POSTS_URL, fields);
   },

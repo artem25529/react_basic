@@ -1,0 +1,18 @@
+.favorites-page {
+  min-height: 100vh;
+
+  .page-num.active {
+    background-color: lightcyan;
+  }
+
+  & > .favorites-title {
+    text-align: center;
+    font-size: 1.2em;
+  }
+
+  & > .favorites-pagination {
+    display: flex;
+    gap: 0.3em;
+    justify-content: center;
+  }
+}
