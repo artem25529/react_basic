@@ -1,13 +1,16 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 import { PageWrapperContext } from '../pages/PageWrapper.jsx';
+import { PostListContext } from './PostList.jsx';
 import Loader from '../components/Loader.jsx';
 import validationService from '../services/validationService.js';
+import localStorageService from '../services/localStorageService.js';
 import postService from '../services/postService.js';
-
-import '../styles/Post.css';
 import userService from '../services/userService.js';
+import '../styles/Post.css';
 
 function Post({ post }) {
+  const { shouldUpdate } = useContext(PostListContext);
+
   const {
     user,
     favorites,
@@ -16,11 +19,6 @@ function Post({ post }) {
     setSuccessMsg,
     setFullscreenPopupContent,
   } = useContext(PageWrapperContext);
-
-  const [isDeleted, setIsDeleted] = useState(false);
-  const [isEdit, setIsEdit] = useState(false);
-  const [errors, setErrors] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
 
   const [values, setValues] = useState({
     title: post.title,
@@ -32,9 +30,114 @@ function Post({ post }) {
     text: values.text,
   });
 
+  const [statValues, setStatValues] = useState({
+    likes: post.statistics.likes,
+    dislikes: post.statistics.dislikes,
+    views: post.statistics.views,
+  });
+
+  const [isFav, setIsFav] = useState(favorites.includes(post.id));
+  const [isDeleted, setIsDeleted] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [isLiked, setIsLiked] = useState(
+    localStorageService.getItemForUser(user, 'likedPosts')?.includes(post.id),
+  );
+  const [isDisliked, setIsDisliked] = useState(
+    localStorageService
+      .getItemForUser(user, 'dislikedPosts')
+      ?.includes(post.id),
+  );
+
+  const postRef = useRef();
   const postEditFormRef = useRef();
   const postTextRef = useRef();
   const applyBtnRef = useRef();
+
+  const intersectionObserverRef = useRef();
+  const statValuesCurrent = useRef(statValues);
+
+  useEffect(() => {
+    if (shouldUpdate) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting) {
+            setStatValues((prev) => ({ ...prev, views: prev.views + 1 }));
+            observer.disconnect();
+          }
+        },
+        { threshold: 1 },
+      );
+
+      observer.observe(postRef.current);
+      intersectionObserverRef.current = observer;
+    }
+
+    return async () => {
+      intersectionObserverRef.current?.disconnect();
+
+      if (shouldUpdate) {
+        if (
+          statValuesCurrent.current.views != post.statistics.views ||
+          statValuesCurrent.current.likes != post.statistics.likes ||
+          statValuesCurrent.current.dislikes != post.statistics.dislikes
+        ) {
+          try {
+            await postService.updatePost({
+              id: post.id,
+              statistics: statValuesCurrent.current,
+            });
+          } catch {
+            setErrorMsg(`Error updating statistics for post ${post.id}!`);
+          }
+        }
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    const likedPosts =
+      localStorageService.getItemForUser(user, 'likedPosts') ?? [];
+
+    if (isLiked) {
+      if (!likedPosts.includes(post.id)) {
+        likedPosts.push(post.id);
+      }
+    } else {
+      if (likedPosts.includes(post.id)) {
+        const idx = likedPosts.indexOf(post.id);
+        likedPosts.splice(idx, 1);
+      }
+    }
+
+    localStorageService.setItemForUser(user, 'likedPosts', likedPosts);
+  }, [isLiked]);
+
+  useEffect(() => {
+    const dislikedPosts =
+      localStorageService.getItemForUser(user, 'dislikedPosts') ?? [];
+
+    if (isDisliked) {
+      if (!dislikedPosts.includes(post.id)) {
+        dislikedPosts.push(post.id);
+      }
+    } else {
+      if (dislikedPosts.includes(post.id)) {
+        const idx = dislikedPosts.indexOf(post.id);
+        dislikedPosts.splice(idx, 1);
+      }
+    }
+
+    localStorageService.setItemForUser(user, 'dislikedPosts', dislikedPosts);
+  }, [isDisliked]);
+
+  useEffect(() => {
+    if (shouldUpdate) {
+      statValuesCurrent.current = statValues;
+    }
+  }, [statValues]);
 
   useEffect(() => {
     if (isEdit) {
@@ -44,16 +147,21 @@ function Post({ post }) {
 
   useEffect(() => {
     setBtnDisabled();
-  }, [formValues]);
+  }, [formValues, isEdit]);
 
   function setBtnDisabled() {
-    applyBtnRef.current.disabled =
-      formValues.title === values.title && formValues.text === values.text;
+    if (applyBtnRef.current) {
+      applyBtnRef.current.disabled =
+        formValues.title === values.title && formValues.text === values.text;
+    }
   }
 
   function setTextareaHeight() {
-    postTextRef.current.style.height = '';
-    postTextRef.current.style.height = postTextRef.current.scrollHeight + 'px';
+    if (postTextRef.current) {
+      postTextRef.current.style.height = '';
+      postTextRef.current.style.height =
+        postTextRef.current.scrollHeight + 'px';
+    }
   }
 
   function handleValueChange(e) {
@@ -76,7 +184,7 @@ function Post({ post }) {
         setErrors,
       );
     } catch {
-      setErrorMsg(`Error validating post with id ${post.id}.`);
+      setErrorMsg(`Error validating post ${post.id}!.`);
       return;
     } finally {
       setIsLoading(false);
@@ -92,11 +200,11 @@ function Post({ post }) {
           text: formValues.text,
         });
 
-        setSuccessMsg(`Post with id ${post.id} updated successfully.`);
+        setSuccessMsg(`Post ${post.id} updated successfully!`);
         setValues((prev) => ({ ...prev, ...formValues }));
         setIsEdit(false);
       } catch {
-        setErrorMsg(`Error updatinng post with id ${post.id}.`);
+        setErrorMsg(`Error updatinng post ${post.id}!.`);
       } finally {
         setIsLoading(false);
       }
@@ -151,9 +259,9 @@ function Post({ post }) {
       await postService.deletePost(post.id);
 
       setIsDeleted(true);
-      setSuccessMsg(`Post with id ${post.id} deleted successfully.`);
+      setSuccessMsg(`Post ${post.id} deleted successfully!`);
     } catch {
-      setErrorMsg(`Error deleting post with id ${post.id}.`);
+      setErrorMsg(`Error deleting post ${post.id}!.`);
     } finally {
       setIsLoading(false);
     }
@@ -165,141 +273,225 @@ function Post({ post }) {
 
   function handleFavClick() {
     if (user) {
+      setIsFav((prev) => !prev);
+
+      let favoritesTemp;
+
       if (favorites.includes(post.id)) {
-        setFavorites((prev) => [...prev].filter((f) => f !== post.id));
+        favoritesTemp = [...favorites].filter((f) => f !== post.id);
       } else {
-        setFavorites((prev) => [...prev, post.id]);
+        favoritesTemp = [...favorites, post.id];
       }
+
+      setFavorites(favoritesTemp);
+
+      (async () => {
+        try {
+          await userService.updateUser({
+            id: user.id,
+            favorites: favoritesTemp,
+          });
+        } catch {
+          setErrors(`Error updating favorites for user ${user?.email}!`);
+        }
+      })();
+    }
+  }
+
+  function handleStatChange(e) {
+    if (user && shouldUpdate) {
+      const stat = e.currentTarget.dataset.stat;
+      let likes = statValues.likes;
+      let dislikes = statValues.dislikes;
+
+      if (stat === 'likes') {
+        if (isLiked) {
+          likes--;
+        } else {
+          likes++;
+        }
+
+        if (isDisliked) {
+          setIsDisliked(false);
+          dislikes--;
+        }
+
+        setIsLiked((prev) => !prev);
+      } else if (stat === 'dislikes') {
+        if (isDisliked) {
+          dislikes--;
+        } else {
+          dislikes++;
+        }
+
+        if (isLiked) {
+          setIsLiked(false);
+          likes--;
+        }
+
+        setIsDisliked((prev) => !prev);
+      }
+
+      setStatValues((prev) => ({ ...prev, likes: likes, dislikes: dislikes }));
     }
   }
 
   return (
     <>
       {!isDeleted && (
-        <article
-          className={
-            'post' + (user ? ' extended' : '') + (isEdit ? ' edit' : '')
-          }
-          data-id={post.id}
-        >
+        <article ref={postRef} className="post">
           {isLoading && (
-            <Loader background={true} text="Processing" spinner={1} />
+            <Loader text="Processing" spinner={1} background={true} />
           )}
 
           <div className="post-content">
-            <form
-              ref={postEditFormRef}
-              id={'post-form-' + post.id}
-              className="post-content-wrapper"
-              onSubmit={handleFormSubmit}
-              noValidate
-              data-post-id={post.id}
-            >
-              <header className="post-title-wrapper">
-                <input
-                  className="post-title"
-                  type="text"
-                  name="title"
-                  value={formValues.title}
+            {user && isEdit && (
+              <form
+                ref={postEditFormRef}
+                id={`post-form-${post.id}`}
+                className="post-content-wrapper"
+                onSubmit={handleFormSubmit}
+                noValidate
+              >
+                <header className="post-title-wrapper">
+                  <input
+                    className="post-title"
+                    type="text"
+                    name="title"
+                    value={formValues.title}
+                    onChange={handleValueChange}
+                    required
+                    minLength="2"
+                    maxLength="100"
+                  />
+                </header>
+                {errors.title && <div className="err">{errors.title}</div>}
+
+                <textarea
+                  ref={postTextRef}
+                  className="post-text"
+                  name="text"
+                  value={formValues.text}
                   onChange={handleValueChange}
                   required
-                  minLength="2"
-                  maxLength="100"
+                  minLength="5"
+                  maxLength="500"
                 />
-              </header>
-              {errors.title && <div className="err">{errors.title}</div>}
-              <textarea
-                className="post-text"
-                ref={postTextRef}
-                name="text"
-                value={formValues.text}
-                onChange={handleValueChange}
-                required
-                minLength="5"
-                maxLength="500"
-              />
-              {errors.text && <div className="err">{errors.text}</div>}
-            </form>
+                {errors.text && <div className="err">{errors.text}</div>}
+              </form>
+            )}
 
-            <div id="post-box" className="post-content-wrapper">
-              <header className="post-title-wrapper">
-                <h3 className="post-title">{values.title}</h3>
-              </header>
-              <div className="post-text">{values.text}</div>
-            </div>
-
-            <div className="post-favorite">
-              <span
-                className={`${
-                  'material-symbols-outlined' +
-                  (favorites.includes(post.id) ? ' active' : '')
-                }`}
-                onClick={handleFavClick}
-              >
-                favorite
-              </span>
-            </div>
-          </div>
-
-          <div className="post-controls">
-            <div className="post-control edit">
-              <div className="edit-control-wrapper">
-                <span
-                  className="material-symbols-outlined"
-                  onClick={handleEditBtn}
-                >
-                  edit_square
-                </span>
+            {!isEdit && (
+              <div className="post-content-wrapper">
+                <header className="post-title-wrapper">
+                  <h3 className="post-title">{values.title}</h3>
+                </header>
+                <div className="post-text">{values.text}</div>
               </div>
-              <div className="submit-control-wrapper">
+            )}
+
+            {user && (
+              <div className="post-favorite">
                 <button
-                  ref={applyBtnRef}
-                  className="post-form-submit-btn"
-                  type="submit"
-                  form={'post-form-' + post.id}
+                  disabled={!user || !shouldUpdate}
+                  type="button"
+                  onClick={handleFavClick}
                 >
-                  <span className="material-symbols-outlined">
-                    check_circle
+                  <span
+                    className={
+                      'material-symbols-outlined fav-icon' +
+                      (isFav ? ' active' : '')
+                    }
+                  >
+                    favorite
                   </span>
                 </button>
-                <span
-                  className="material-symbols-outlined"
-                  onClick={handleCancelBtn}
-                >
-                  cancel
-                </span>
+              </div>
+            )}
+          </div>
+
+          {user && shouldUpdate && (
+            <div className="post-controls">
+              <div className="post-control edit">
+                {user && !isEdit && (
+                  <button type="button" onClick={handleEditBtn}>
+                    <span className="material-symbols-outlined control-icon">
+                      edit_square
+                    </span>
+                  </button>
+                )}
+
+                {user && isEdit && (
+                  <>
+                    <button
+                      ref={applyBtnRef}
+                      type="submit"
+                      form={`post-form-${post.id}`}
+                    >
+                      <span className="material-symbols-outlined control-icon">
+                        check_circle
+                      </span>
+                    </button>
+
+                    <button type="button" onClick={handleCancelBtn}>
+                      <span className="material-symbols-outlined control-icon">
+                        cancel
+                      </span>
+                    </button>
+                  </>
+                )}
+              </div>
+              <div className="post-control remove">
+                <button type="button" onClick={handleDeleteBtn}>
+                  <span className="material-symbols-outlined control-icon">
+                    delete
+                  </span>
+                </button>
               </div>
             </div>
-            <div className="post-control remove">
-              <span
-                className="material-symbols-outlined"
-                onClick={handleDeleteBtn}
-              >
-                delete
-              </span>
-            </div>
-          </div>
+          )}
 
           <div className="post-statistics">
             <div className="post-statistic views">
               <span className="material-symbols-outlined statistic-icon">
                 visibility
               </span>
-              <span className="statistic-value">{post.statistics.views}</span>
+              <span className="statistic-value">{statValues.views}</span>
             </div>
-            <div className="post-statistic likes">
-              <span className="material-symbols-outlined statistic-icon">
-                thumb_up
-              </span>
-              <span className="statistic-value">{post.statistics.likes}</span>
+            <div className="post-statistic">
+              <button
+                disabled={!user}
+                type="button"
+                data-stat="likes"
+                data-no-pointer-events={
+                  user && !shouldUpdate ? 'true' : undefined
+                }
+                className={user && !isLiked ? 'opaque' : undefined}
+                onClick={handleStatChange}
+              >
+                <span className="material-symbols-outlined statistic-icon">
+                  thumb_up
+                </span>
+              </button>
+
+              <span className="statistic-value">{statValues.likes}</span>
             </div>
-            <div className="post-statistic dislikes">
-              <span className="material-symbols-outlined statistic-icon">
-                thumb_down
-              </span>
-              <span className="statistic-value">
-                {post.statistics.dislikes}
-              </span>
+            <div className="post-statistic rating dislikes">
+              <button
+                disabled={!user}
+                type="button"
+                data-stat="dislikes"
+                data-no-pointer-events={
+                  user && !shouldUpdate ? 'true' : undefined
+                }
+                className={user && !isDisliked ? 'opaque' : undefined}
+                onClick={handleStatChange}
+              >
+                <span className="material-symbols-outlined statistic-icon">
+                  thumb_down
+                </span>
+              </button>
+              <span className="statistic-value">{statValues.dislikes}</span>
             </div>
           </div>
         </article>

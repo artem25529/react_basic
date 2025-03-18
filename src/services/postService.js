@@ -31,9 +31,12 @@ const postService = {
   },
 
   async updatePost(post) {
+    const dataForUpdate = { ...post };
+    delete dataForUpdate.id;
+
     const response = await fetch(`${POSTS_URL}/${post.id}`, {
       method: 'PATCH',
-      body: JSON.stringify(post),
+      body: JSON.stringify(dataForUpdate),
 
       headers: { 'Content-Type': 'application/json' },
     });

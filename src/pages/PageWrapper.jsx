@@ -5,15 +5,15 @@ import Footer from '../components/Footer.jsx';
 import PopupMessage from '../components/PopupMessage.jsx';
 import FullscreenPopup from '../components/FullscreenPopup.jsx';
 import Advert from '../components/Advert.jsx';
+import Loader from '../components/Loader.jsx';
 import themeService from '../services/themeService.js';
 import '../styles/PageWrapper.css';
-import userService from '../services/userService.js';
-import Loader from '../components/Loader.jsx';
+import localStorageService from '../services/localStorageService.js';
 
 const PageWrapperContext = createContext();
 
 function PageWrapper() {
-  const [user, setUser] = useState(localStorage.getItem('loggedInUser'));
+  const [user, setUser] = useState(localStorageService.getLoggedInUser());
   const [favorites, setFavorites] = useState([]);
 
   const [successMsg, setSuccessMsg] = useState();
@@ -47,12 +47,9 @@ function PageWrapper() {
   }
 
   useEffect(() => {
-    localStorage.setItem('loggedInUser', user);
-    themeService.applyCurrentTheme(user);
-
-    if (user) {
-      userService.getUser(user, setResponse);
-    }
+    localStorageService.setLoggedInUser(user);
+    themeService.applyCurrentTheme(user?.email);
+    setFavorites(user?.favorites ? user.favorites : []);
   }, [user]);
 
   useEffect(() => {

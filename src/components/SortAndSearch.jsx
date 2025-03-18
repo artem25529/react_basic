@@ -68,6 +68,16 @@ function SortAndSearch({ searchParams, setSearchParams }) {
     );
   }
 
+  function handleFormSubmit(e) {
+    e.preventDefault();
+
+    if (tOut) {
+      clearTimeout(tOut);
+    }
+
+    changeQuery(input);
+  }
+
   function changeQuery(value) {
     if (value) {
       urlUtils.changeQuery({ query: { operation: 'set', value: value } });
@@ -120,7 +130,7 @@ function SortAndSearch({ searchParams, setSearchParams }) {
           </div>
         </div>
       </div>
-      <div className="search-wrapper">
+      <form className="search-wrapper" onSubmit={handleFormSubmit}>
         <label htmlFor="search">
           <span className="material-symbols-outlined">search</span>
         </label>
@@ -131,7 +141,7 @@ function SortAndSearch({ searchParams, setSearchParams }) {
           value={input}
           onChange={handleInputChange}
         />
-      </div>
+      </form>
     </section>
   );
 }

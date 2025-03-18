@@ -45,7 +45,7 @@ function Login({ isLogin }) {
     setIsLoading(true);
 
     try {
-      await validationService.validateLoginForm(
+      const user = await validationService.validateLoginForm(
         loginFormRef.current,
         isLogin,
         setErrors,
@@ -53,13 +53,17 @@ function Login({ isLogin }) {
 
       if (loginFormRef.current.checkValidity()) {
         if (isLogin) {
-          setUser(values.email);
+          setUser(user);
           setSuccessMsg("You've logged in successfully!");
           setSuccessMsgCallback(successCallback);
           setSuccessMsgMillis(1000);
         } else {
-          await userService.createUser(values.email, values.password);
-          setUser(values);
+          const newUser = await userService.createUser(
+            values.email,
+            values.password,
+          );
+
+          setUser(newUser);
           setSuccessMsg("You've created a user successfully!");
           setSuccessMsgCallback(successCallback);
           setSuccessMsgMillis(1000);

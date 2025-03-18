@@ -46,20 +46,24 @@ const validationService = {
       });
 
       if (!users[0]) {
-        const err = 'No match for such email and password.';
+        const err = 'No match for such email and password!';
         setErrors((prev) => ({ ...prev, [passwordInput.name]: err }));
         passwordInput.setCustomValidity(err);
       }
+
+      return users[0];
     } else {
       const users = await userService.getUsersByFieldsAsync({
         email: emailInput.value,
       });
 
       if (users[0]) {
-        const err = 'User with such an email already exists.';
+        const err = 'User with such an email already exists!';
         setErrors((prev) => ({ ...prev, [emailInput.name]: err }));
         emailInput.setCustomValidity(err);
       }
+
+      return users[0];
     }
   },
 
@@ -70,7 +74,7 @@ const validationService = {
 
     if (!isFormValid) return;
 
-    const postId = form.dataset.postId;
+    const postId = form.id.slice(10);
     const titleInput = form.title;
     const title = titleInput.value;
 

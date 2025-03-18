@@ -1,9 +1,20 @@
 .post {
-  background-color: rgb(235, 255, 248);
+  background-color: rgb(253, 241, 255);
   padding: 1.5em;
-  margin: 1em 0;
   position: relative;
+  display: flex;
+  gap: 1em;
+  flex-direction: column;
   border: 1px solid;
+
+  button {
+    display: block;
+    cursor: pointer;
+
+    &[data-no-pointer-events='true'] {
+      pointer-events: none;
+    }
+  }
 
   .err {
     color: crimson;
@@ -11,73 +22,70 @@
 
   & > .post-content {
     display: flex;
-    gap: 0.45em;
-    margin-bottom: 1.2em;
+    gap: 0.4em;
 
     & > .post-content-wrapper {
       flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6em;
 
       & > .post-title-wrapper {
         font-weight: bold;
         font-size: 1.6em;
-        margin-bottom: 0.5em;
 
         & > .post-title {
           width: 100%;
+          min-height: 1lh;
         }
       }
 
       & > .post-text {
-        line-height: 1.6;
         width: 100%;
+        line-height: 1.6;
+        min-height: 2lh;
       }
     }
 
     & > .post-favorite {
-    }
+      .fav-icon {
+        font-size: 2.15em;
+        font-variation-settings: 'FILL' 0, 'wght' 300;
 
-    & > [id^='post-form'] {
-      display: none;
-    }
-
-    & > #post-box {
-      display: block;
-    }
-
-    & > .post-favorite {
-      font-size: 1.5em;
-      display: none;
+        &.active {
+          font-variation-settings: 'FILL' 1;
+          color: crimson;
+        }
+      }
     }
   }
 
   & > .post-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.8em;
     width: 5em;
     right: -5em;
     top: 50%;
     transform: translateY(-50%);
     position: absolute;
-    display: none;
 
-    .post-control {
-      width: fit-content;
+    & > .post-control {
       border: 1px solid;
       border-left: none;
-      padding: 0.4em 0.75em;
+      padding: 0.45em 0.75em;
       border-top-right-radius: 0.4em;
       border-bottom-right-radius: 0.4em;
 
-      .material-symbols-outlined {
+      .control-icon {
         display: block;
       }
-    }
 
-    .post-control.edit {
-      margin-bottom: 1.7em;
-
-      & > .submit-control-wrapper {
-        & > .post-form-submit-btn {
-          margin-bottom: 1em;
-        }
+      &.edit {
+        display: flex;
+        flex-direction: column;
+        gap: 0.9em;
       }
     }
   }
@@ -95,55 +103,6 @@
 
       &:first-child {
         margin-right: auto;
-      }
-    }
-
-    .view-part {
-    }
-  }
-}
-
-.post.extended {
-  & > .post-controls {
-    display: block;
-
-    & > .post-control.edit {
-      & > .edit-control-wrapper {
-        display: block;
-      }
-
-      & > .submit-control-wrapper {
-        display: none;
-      }
-    }
-  }
-
-  & > .post-content {
-    & > .post-favorite {
-      display: block;
-    }
-  }
-}
-
-.post.extended.edit {
-  & > .post-content {
-    & > [id^='post-form'] {
-      display: block;
-    }
-
-    & > #post-box {
-      display: none;
-    }
-  }
-
-  & > .post-controls {
-    & > .post-control.edit {
-      & > .edit-control-wrapper {
-        display: none;
-      }
-
-      & > .submit-control-wrapper {
-        display: block;
       }
     }
   }

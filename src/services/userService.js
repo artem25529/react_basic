@@ -23,8 +23,15 @@ const userService = {
     performAPICall(USERS_URL, { email }, 'GET', null, setResponse);
   },
 
-  updateUser(user, setResponse) {
-    //performAPICall(USERS_URL, { email }, 'PATCH', null, setResponse);
+  async updateUser(user) {
+    const response = await fetch(`${USERS_URL}/${user.id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(user),
+
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    return await response.json();
   },
 };
 

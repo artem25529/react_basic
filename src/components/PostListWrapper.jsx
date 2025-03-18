@@ -22,9 +22,7 @@ function PostListWrapper({ searchParams }) {
   const prevObserver = useRef();
 
   const intersectionObserver = useMemo(() => {
-    if (prevObserver.current) {
-      prevObserver.current.disconnect();
-    }
+    prevObserver.current?.disconnect();
 
     if (!lastPost) {
       return null;
@@ -32,21 +30,25 @@ function PostListWrapper({ searchParams }) {
 
     const observer = new IntersectionObserver(
       (entries) => {
-        const lastPostEntry = entries[0];
-
-        if (lastPostEntry.isIntersecting) {
+        if (entries[0].isIntersecting) {
           setPage((curr) => response?.pages?.next ?? curr);
 
-          observer.unobserve(lastPostEntry.target);
           observer.disconnect();
         }
       },
-      { threshold: 1 },
+      { threshold: 0.9 },
     );
 
     prevObserver.current = observer;
     return observer;
   }, [lastPost]);
+
+  useEffect(() => {
+    return () => {
+      intersectionObserver?.disconnect();
+      prevObserver.current?.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     if (prevSearchParams.current !== searchParams) {
@@ -92,7 +94,9 @@ function PostListWrapper({ searchParams }) {
         <PopupMessage level="error" message="Error loading posts." />
       )}
 
-      {postList.length > 0 && <PostList posts={postList} ref={setLastPost} />}
+      {postList.length > 0 && (
+        <PostList shouldUpdate={true} posts={postList} ref={setLastPost} />
+      )}
 
       {response.isInProgress && (
         <Loader

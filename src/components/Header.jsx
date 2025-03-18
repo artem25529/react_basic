@@ -55,7 +55,7 @@ function Header() {
 
         {user ? (
           <section className="user-wrapper">
-            <div className="username">{user}</div>
+            <div className="username">{user.email}</div>
             <button onClick={handleLogout} type="button" className="logout btn">
               Log Out
             </button>

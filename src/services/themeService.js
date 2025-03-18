@@ -6,7 +6,7 @@ const themeService = {
 
     if (!theme) {
       theme = matchMedia('(prefers-color-scheme:light)') ? 'light' : 'dark';
-      localStorageService.setItemForUser(user), 'theme', theme;
+      localStorageService.setItemForUser(user, 'theme', theme);
     }
 
     document.documentElement.classList.toggle('dark', theme === 'dark');
