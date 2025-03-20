@@ -81,11 +81,11 @@ body {
 .disabled,
 :disabled {
   pointer-events: none;
-  opacity: 0.5;
+  opacity: 0.56;
 }
 
 .opaque {
-  opacity: 0.5;
+  opacity: 0.56;
 }
 
 .no-pointer-events {

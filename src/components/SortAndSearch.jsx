@@ -1,41 +1,39 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState, useContext } from 'react';
 import urlUtils from '../utils/urlUtils.js';
 import '../styles/SortAndSearch.css';
 import { Link } from 'react-router-dom';
+import localStorageService from '../services/localStorageService.js';
+
+import { PageWrapperContext } from '../pages/PageWrapper.jsx';
 
 function SortAndSearch({ searchParams, setSearchParams }) {
+  const { user } = useContext(PageWrapperContext);
   const [input, setInput] = useState(searchParams.query);
-  const [tOut, setTOut] = useState();
+  const timeout = useRef();
 
   useEffect(() => {
-    if (input !== searchParams.query) {
-      handleQueryChange();
-    }
+    handleQueryChange();
   }, [input]);
 
   function handleSortChange(e) {
-    const targetField = e.currentTarget;
-    console.log(targetField);
+    let sort, order;
+    const sortField = e.currentTarget.dataset.sort;
 
-    const sortFields = targetField.closest('.sort-fields').children;
-
-    for (const field of sortFields) {
-      const isSameNode = field.isSameNode(targetField);
-      const sortOrder = field.dataset.order;
-
-      field.classList.toggle('active', isSameNode && sortOrder !== 'desc');
-
-      if (field.classList.contains('active')) {
-        field.dataset.order = sortOrder ? 'desc' : 'asc';
+    if (sortField === searchParams.sort) {
+      if (searchParams.order === 'asc') {
+        order = 'desc';
+        sort = sortField;
       } else {
-        delete field.dataset.order;
+        order = null;
+        sort = null;
       }
+    } else {
+      sort = sortField;
+      order = 'asc';
     }
 
-    const activeField = document.querySelector('.sort-field.active');
-
-    const sort = activeField?.dataset?.field;
-    const order = activeField?.dataset?.order;
+    localStorageService.setItemForUser(user, 'sort', sort);
+    localStorageService.setItemForUser(user, 'order', order);
 
     if (sort) {
       urlUtils.changeQuery({
@@ -57,28 +55,26 @@ function SortAndSearch({ searchParams, setSearchParams }) {
   }
 
   function handleQueryChange() {
-    if (tOut) {
-      clearTimeout(tOut);
-    }
+    clearTimeout(timeout.current);
 
-    setTOut(
-      setTimeout(() => {
+    if (input !== searchParams.query) {
+      timeout.current = setTimeout(() => {
         changeQuery(input);
-      }, 1000),
-    );
+      }, 1000);
+    }
   }
 
   function handleFormSubmit(e) {
     e.preventDefault();
 
-    if (tOut) {
-      clearTimeout(tOut);
-    }
+    clearTimeout(timeout.current);
 
     changeQuery(input);
   }
 
   function changeQuery(value) {
+    localStorageService.setItemForUser(user, 'query', value);
+
     if (value) {
       urlUtils.changeQuery({ query: { operation: 'set', value: value } });
     } else {
@@ -90,43 +86,54 @@ function SortAndSearch({ searchParams, setSearchParams }) {
 
   return (
     <section className="sort-search-container">
-      <div className="add-new-post-wrapper">
-        <Link to="/new-post">Add new post</Link>
-      </div>
       <div className="sort-wrapper">
         <div className="sort-title">Sorting:</div>
         <div className="sort-fields">
           <div
-            data-field="views"
-            className="sort-field"
+            data-sort="views"
+            className={
+              'sort-field' + (searchParams.sort === 'views' ? ' active' : '')
+            }
             onClick={handleSortChange}
           >
-            <span className="material-symbols-outlined sort">visibility</span>
-            <span className="material-symbols-outlined placeholder">
-              swap_vert
-            </span>
-            <span data-order="asc" className="material-symbols-outlined order">
-              straight
-            </span>
-            <span data-order="desc" className="material-symbols-outlined order">
-              straight
-            </span>
+            <span className="material-symbols-outlined">visibility</span>
+
+            {searchParams.sort !== 'views' && (
+              <span className="material-symbols-outlined">sort</span>
+            )}
+
+            {searchParams.sort === 'views' && searchParams.order === 'asc' && (
+              <span className="material-symbols-outlined">straight</span>
+            )}
+
+            {searchParams.sort === 'views' && searchParams.order === 'desc' && (
+              <span data-order="desc" className="material-symbols-outlined">
+                straight
+              </span>
+            )}
           </div>
           <div
-            data-field="likes"
-            className="sort-field"
+            data-sort="likes"
+            className={
+              'sort-field' + (searchParams.sort === 'likes' ? ' active' : '')
+            }
             onClick={handleSortChange}
           >
-            <span className="material-symbols-outlined sort">thumb_up</span>
-            <span className="material-symbols-outlined placeholder">
-              swap_vert
-            </span>
-            <span data-order="asc" className="material-symbols-outlined order">
-              straight
-            </span>
-            <span data-order="desc" className="material-symbols-outlined order">
-              straight
-            </span>
+            <span className="material-symbols-outlined">thumb_up</span>
+
+            {searchParams.sort !== 'likes' && (
+              <span className="material-symbols-outlined">sort</span>
+            )}
+
+            {searchParams.sort === 'likes' && searchParams.order === 'asc' && (
+              <span className="material-symbols-outlined">straight</span>
+            )}
+
+            {searchParams.sort === 'likes' && searchParams.order === 'desc' && (
+              <span data-order="desc" className="material-symbols-outlined">
+                straight
+              </span>
+            )}
           </div>
         </div>
       </div>
@@ -135,12 +142,17 @@ function SortAndSearch({ searchParams, setSearchParams }) {
           <span className="material-symbols-outlined">search</span>
         </label>
         <input
-          type="search"
+          type="text"
           id="search"
           placeholder="Search"
           value={input}
           onChange={handleInputChange}
         />
+        {input && (
+          <button type="reset" onClick={() => setInput('')}>
+            <span className="material-symbols-outlined">close</span>
+          </button>
+        )}
       </form>
     </section>
   );

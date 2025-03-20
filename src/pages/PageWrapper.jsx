@@ -5,15 +5,15 @@ import Footer from '../components/Footer.jsx';
 import PopupMessage from '../components/PopupMessage.jsx';
 import FullscreenPopup from '../components/FullscreenPopup.jsx';
 import Advert from '../components/Advert.jsx';
-import Loader from '../components/Loader.jsx';
 import themeService from '../services/themeService.js';
-import '../styles/PageWrapper.css';
 import localStorageService from '../services/localStorageService.js';
+import '../styles/PageWrapper.css';
 
 const PageWrapperContext = createContext();
 
 function PageWrapper() {
   const [user, setUser] = useState(localStorageService.getLoggedInUser());
+  const [theme, setTheme] = useState();
   const [favorites, setFavorites] = useState([]);
 
   const [successMsg, setSuccessMsg] = useState();
@@ -23,16 +23,7 @@ function PageWrapper() {
   const [errorMsg, setErrorMsg] = useState();
   const [errorMsgMillis, setErrorMsgMillis] = useState();
   const [errorMsgCallback, setErrorMsgCallback] = useState();
-
   const [fullscreenPopupContent, setFullscreenPopupContent] = useState();
-
-  const [response, setResponse] = useState({
-    pages: null,
-    data: null,
-    error: null,
-    isInProgress: false,
-    isDone: false,
-  });
 
   function successPopupResetCallback() {
     setSuccessMsg();
@@ -48,29 +39,21 @@ function PageWrapper() {
 
   useEffect(() => {
     localStorageService.setLoggedInUser(user);
-    themeService.applyCurrentTheme(user?.email);
+    setTheme(themeService.getThemeForUser(user));
     setFavorites(user?.favorites ? user.favorites : []);
   }, [user]);
 
   useEffect(() => {
-    if (response.isDone) {
-      if (response.error) {
-        setErrorMsg('Error loading a user');
-      } else if (response.data) {
-        if (response.data.length === 0) {
-          setErrorMsg(`User ${user} not found`);
-        } else {
-          setFavorites(response.data[0].favorites ?? []);
-        }
-      }
-    }
-  }, [response]);
+    themeService.applyTheme(user, theme);
+  }, [theme]);
 
   return (
     <PageWrapperContext.Provider
       value={{
         user,
         setUser,
+        theme,
+        setTheme,
         favorites,
         setFavorites,
         setSuccessMsg,
@@ -111,15 +94,6 @@ function PageWrapper() {
       )}
 
       <section className="page-wrapper">
-        {response.isInProgress && (
-          <Loader
-            contentStyle={{ position: 'fixed', top: '45vh' }}
-            text="Loading data"
-            spinner={2}
-            background={true}
-          />
-        )}
-
         <Header />
         <div className="page-content-wrapper">
           <Advert />

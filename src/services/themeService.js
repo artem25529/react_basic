@@ -1,26 +1,22 @@
-import localStorageService from './localStorageService';
+import localStorageService from './localStorageService.js';
 
 const themeService = {
-  applyCurrentTheme(user) {
-    let theme = localStorageService.getItemForUser(user, 'theme');
-
-    if (!theme) {
-      theme = matchMedia('(prefers-color-scheme:light)') ? 'light' : 'dark';
-      localStorageService.setItemForUser(user, 'theme', theme);
-    }
+  applyTheme(user, theme) {
+    localStorageService.setItemForUser(user, 'theme', theme);
 
     document.documentElement.classList.toggle('dark', theme === 'dark');
   },
 
-  toggleTheme(user) {
-    const targetTheme =
-      localStorageService.getItemForUser(user, 'theme') === 'light'
-        ? 'dark'
-        : 'light';
+  getThemeForUser(user) {
+    let theme = localStorageService.getItemForUser(user, 'theme');
 
-    localStorageService.setItemForUser(user, targetTheme);
+    if (!theme) {
+      theme = matchMedia('(prefers-color-scheme:light)').matches
+        ? 'light'
+        : 'dark';
+    }
 
-    document.documentElement.classList.toggle('dark', targetTheme === 'dark');
+    return theme;
   },
 };
 

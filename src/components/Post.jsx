@@ -79,8 +79,9 @@ function Post({ post }) {
       intersectionObserverRef.current?.disconnect();
 
       if (shouldUpdate) {
+        //not updating if only views were changed cause
+        // json server often crashes cause of many updates
         if (
-          statValuesCurrent.current.views != post.statistics.views ||
           statValuesCurrent.current.likes != post.statistics.likes ||
           statValuesCurrent.current.dislikes != post.statistics.dislikes
         ) {
@@ -458,15 +459,16 @@ function Post({ post }) {
               </span>
               <span className="statistic-value">{statValues.views}</span>
             </div>
-            <div className="post-statistic">
+            <div
+              className={
+                'post-statistic rating likes' +
+                (!user ? ' disabled' : !isLiked ? ' opaque' : '')
+              }
+            >
               <button
-                disabled={!user}
                 type="button"
                 data-stat="likes"
-                data-no-pointer-events={
-                  user && !shouldUpdate ? 'true' : undefined
-                }
-                className={user && !isLiked ? 'opaque' : undefined}
+                className={user && !shouldUpdate ? 'no-pointer-events' : ''}
                 onClick={handleStatChange}
               >
                 <span className="material-symbols-outlined statistic-icon">
@@ -476,15 +478,16 @@ function Post({ post }) {
 
               <span className="statistic-value">{statValues.likes}</span>
             </div>
-            <div className="post-statistic rating dislikes">
+            <div
+              className={
+                'post-statistic rating dislikes' +
+                (!user ? ' disabled' : !isDisliked ? ' opaque' : '')
+              }
+            >
               <button
-                disabled={!user}
                 type="button"
                 data-stat="dislikes"
-                data-no-pointer-events={
-                  user && !shouldUpdate ? 'true' : undefined
-                }
-                className={user && !isDisliked ? 'opaque' : undefined}
+                className={user && !shouldUpdate ? 'no-pointer-events' : ''}
                 onClick={handleStatChange}
               >
                 <span className="material-symbols-outlined statistic-icon">

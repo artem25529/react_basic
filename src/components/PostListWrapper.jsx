@@ -76,9 +76,13 @@ function PostListWrapper({ searchParams }) {
 
     if (response.isDone && response.data) {
       if (page <= 1) {
-        setPostList([...response.data]);
+        setPostList(response.data);
       } else {
-        setPostList((curr) => [...curr, ...response.data]);
+        setPostList((curr) =>
+          [...curr, ...response.data].filter(
+            (val, idx, arr) => arr.findIndex((v) => v.id === val.id) === idx,
+          ),
+        );
       }
     }
   }, [response]);

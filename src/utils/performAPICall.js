@@ -78,8 +78,6 @@ function parseLinkHeader(link) {
     res[rel] = +page;
   });
 
-  console.log(res);
-
   return res;
 }
 

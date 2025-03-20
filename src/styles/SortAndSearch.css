@@ -21,41 +21,17 @@
       gap: 0.5em;
 
       & > .sort-field {
-        color: rgb(142, 142, 142);
+        opacity: 0.56;
         cursor: pointer;
         display: flex;
         align-items: center;
 
-        & > .order {
-          display: none;
-        }
-
-        & > .placeholder {
-          display: block;
+        &.active {
+          opacity: 1;
         }
 
         & > [data-order='desc'] {
           rotate: 0.5turn;
-        }
-      }
-
-      & > .sort-field.active {
-        color: black;
-
-        & > .placeholder {
-          display: none;
-        }
-      }
-
-      & > .sort-field[data-order='asc'] {
-        & > .order[data-order='asc'] {
-          display: block;
-        }
-      }
-
-      .sort-field[data-order='desc'] {
-        & > .order[data-order='desc'] {
-          display: block;
         }
       }
     }
@@ -64,17 +40,33 @@
   & > .search-wrapper {
     margin-left: auto;
     display: flex;
+    align-items: center;
     gap: 0.2em;
+    position: relative;
 
     & > label {
       display: flex;
       align-items: center;
+      cursor: text;
     }
 
-    & > input {
+    & > input[type='text'] {
       width: 10em;
       padding: 0.1em 0.4em;
       border: 1px solid;
+    }
+
+    & > button[type='reset'] {
+      display: flex;
+      align-items: center;
+      position: absolute;
+      right: 0.2em;
+      cursor: pointer;
+
+      & > .material-symbols-outlined {
+        font-size: 1em;
+        font-variation-settings: 'wght' 600;
+      }
     }
   }
 }
