@@ -10,6 +10,7 @@ function Footer() {
     <section className="page-footer">
       <div className="footer-wrapper">
         <address className="footer-contacts-wrapper">
+          <div className="footer-address">3rd Mozhaisky Lane 11</div>
           <div className="footer-contacts">
             <div className="contact-wrapper">
               <a href="tel:+375294555316">
@@ -24,7 +25,6 @@ function Footer() {
               </a>
             </div>
           </div>
-          <div className="footer-address"></div>
         </address>
 
         <div className="footer-links">

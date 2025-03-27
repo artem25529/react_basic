@@ -19,7 +19,7 @@ function Header() {
 
   return (
     <header className="page-header">
-      <Link className="logo-container" to="/blog">
+      <Link className="logo-container" to="/">
         <img
           className="logo-img"
           src="https://img.icons8.com/pulsar-color/240/chat-message.png"
@@ -31,51 +31,75 @@ function Header() {
       <nav className="navigation">
         <ul>
           <li>
-            <NavLink to="/about">About</NavLink>
+            <NavLink className="nav-btn" to="/blog">
+              Blog
+            </NavLink>
           </li>
-          <li>
-            <NavLink to="/blog">Blog</NavLink>
-          </li>
-          <li>
-            <NavLink to="/favorites">Favorites</NavLink>
-          </li>
+          {user && (
+            <>
+              <li>
+                <NavLink className="nav-btn" to="/about">
+                  About
+                </NavLink>
+              </li>
+              <li>
+                <NavLink className="nav-btn" to="/favorites">
+                  Favorites
+                </NavLink>
+              </li>
+            </>
+          )}
         </ul>
       </nav>
 
       <div className="right-content-wrapper">
         <section className="theme-switcher">
           {theme === 'dark' && (
-            <div className="theme light" onClick={handleThemeChange}>
+            <button
+              type="button"
+              className="theme light"
+              onClick={handleThemeChange}
+            >
               <span className="theme-label">Light</span>
               <span className="material-symbols-outlined theme-icon">
                 light_mode
               </span>
-            </div>
+            </button>
           )}
 
           {theme === 'light' && (
-            <div className="theme dark" onClick={handleThemeChange}>
+            <button
+              type="button"
+              className="theme dark"
+              onClick={handleThemeChange}
+            >
               <span className="theme-label">Dark</span>
               <span className="material-symbols-outlined theme-icon">
                 dark_mode
               </span>
-            </div>
+            </button>
           )}
         </section>
 
         {user ? (
           <section className="user-wrapper">
-            <div className="username">{user.email}</div>
-            <button onClick={handleLogout} type="button" className="logout">
+            <Link to="/about" className="username">
+              {user.email}
+            </Link>
+            <button
+              onClick={handleLogout}
+              type="button"
+              className="logout nav-btn"
+            >
               Log Out
             </button>
           </section>
         ) : (
           <section className="login-wrapper">
-            <Link to="/login" className="login">
+            <Link to="/login" className="login nav-btn">
               Log In
             </Link>
-            <Link to="/signup" className="signup">
+            <Link to="/signup" className="signup nav-btn">
               Sign Up
             </Link>
           </section>

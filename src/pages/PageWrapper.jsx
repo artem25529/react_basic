@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import Header from '../components/Header.jsx';
 import Footer from '../components/Footer.jsx';
 import PopupMessage from '../components/PopupMessage.jsx';
@@ -7,11 +7,15 @@ import FullscreenPopup from '../components/FullscreenPopup.jsx';
 import Advert from '../components/Advert.jsx';
 import themeService from '../services/themeService.js';
 import localStorageService from '../services/localStorageService.js';
+import urlUtils from '../utils/urlUtils.js';
 import '../styles/PageWrapper.css';
 
 const PageWrapperContext = createContext();
 
 function PageWrapper() {
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const [user, setUser] = useState(localStorageService.getLoggedInUser());
   const [theme, setTheme] = useState();
   const [favorites, setFavorites] = useState([]);
@@ -36,6 +40,31 @@ function PageWrapper() {
     setErrorMsgCallback();
     setErrorMsgMillis();
   }
+
+  useEffect(() => {
+    if (location.pathname === '/') {
+      navigate('/blog');
+    } else if (location.pathname === '/blog') {
+      const query = localStorageService.getItemForUser(user, 'query');
+      const sort = localStorageService.getItemForUser(user, 'sort');
+      const order = localStorageService.getItemForUser(user, 'order');
+
+      urlUtils.changeQuery({
+        query: {
+          operation: query ? 'set' : 'delete',
+          value: query,
+        },
+        sort: {
+          operation: sort ? 'set' : 'delete',
+          value: sort,
+        },
+        order: {
+          operation: order ? 'set' : 'delete',
+          value: order,
+        },
+      });
+    }
+  }, [location]);
 
   useEffect(() => {
     localStorageService.setLoggedInUser(user);

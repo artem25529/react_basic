@@ -1,11 +1,15 @@
-import { useState, useEffect, useMemo, useRef } from 'react';
+import { useState, useEffect, useMemo, useRef, useContext } from 'react';
+import { PageWrapperContext } from '../pages/PageWrapper.jsx';
 import PostList from './PostList.jsx';
-import PopupMessage from '../components/PopupMessage.jsx';
 import Loader from '../components/Loader.jsx';
 import postService from '../services/postService.js';
 import windowUtils from '../services/windowUtils.js';
 
+import '../styles/PostListWrapper.css';
+
 function PostListWrapper({ searchParams }) {
+  const { setErrorMsg } = useContext(PageWrapperContext);
+
   const [page, setPage] = useState(1);
   const [postList, setPostList] = useState([]);
   const [lastPost, setLastPost] = useState();
@@ -91,13 +95,13 @@ function PostListWrapper({ searchParams }) {
     if (response.isInProgress && page > 1) {
       windowUtils.scrollDown();
     }
+
+    if (response.isDone && response.error) {
+      setErrorMsg('Error loading posts!');
+    }
   }, [response, page]);
   return (
     <>
-      {response.isDone && response.error && (
-        <PopupMessage level="error" message="Error loading posts." />
-      )}
-
       {postList.length > 0 && (
         <PostList shouldUpdate={true} posts={postList} ref={setLastPost} />
       )}
@@ -105,13 +109,9 @@ function PostListWrapper({ searchParams }) {
       {response.isInProgress && (
         <Loader
           background={page <= 1}
-          text="Loading posts"
+          vpFixedContent={page <= 1}
+          text="Loading"
           spinner={1}
-          contentStyle={
-            page <= 1
-              ? { position: 'fixed', top: '45vh' }
-              : { paddingBlock: '0.2em 0.6em' }
-          }
         />
       )}
 

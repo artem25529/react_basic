@@ -92,6 +92,26 @@ const validationService = {
     }
   },
 
+  async validateNewPostForm(form, setErrors) {
+    this.resetFormErrors(form, setErrors);
+
+    const isFormValid = this.validateFormElements(form, setErrors);
+
+    if (!isFormValid) return;
+
+    const titleInput = form['post-title'];
+    const title = titleInput.value;
+
+    const posts = await postService.getPostsByFieldsAsync({ title });
+
+    if (posts.length) {
+      const err = 'Post with such title already exists!';
+
+      titleInput.setCustomValidity(err);
+      setErrors((prev) => ({ ...prev, [titleInput.name]: err }));
+    }
+  },
+
   validateFormElements(form, setErrors) {
     const isFormValid = form.checkValidity();
 

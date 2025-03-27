@@ -4,6 +4,7 @@ import PostList from '../components/PostList.jsx';
 import Loader from '../components/Loader.jsx';
 import postService from '../services/postService.js';
 import '../styles/About.css';
+import windowUtils from '../services/windowUtils.js';
 
 const INTERVAL = 3000;
 
@@ -39,6 +40,12 @@ function About() {
         setPostList(response.data);
       }
     }
+
+    if (response.isInProgress) {
+      windowUtils.toggleWindowScroll(false);
+    } else {
+      windowUtils.toggleWindowScroll(true);
+    }
   }, [response]);
 
   useEffect(() => {
@@ -60,7 +67,7 @@ function About() {
       interval.current = setInterval(intervalFunc, INTERVAL);
     }
 
-    const btn = e.target;
+    const btn = e.currentTarget;
     const isNextBtn = btn.classList.contains('next');
 
     const postList = btn.parentElement.querySelector('.post-list');
@@ -101,8 +108,8 @@ function About() {
         <Loader
           text="Loading"
           background={true}
+          vpFixedContent={true}
           spinner={1}
-          contentStyle={{ position: 'fixed', top: '45vh' }}
         />
       )}
 
@@ -137,7 +144,7 @@ function About() {
               className="btn prev"
               onClick={handleButtonClick}
             >
-              prev
+              <span className="material-symbols-outlined">arrow_back_2</span>
             </button>
             <PostList posts={postList} />
             <button
@@ -146,7 +153,7 @@ function About() {
               className="btn next"
               onClick={handleButtonClick}
             >
-              next
+              <span className="material-symbols-outlined">play_arrow</span>
             </button>
           </div>
         </div>

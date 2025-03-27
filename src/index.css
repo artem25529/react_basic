@@ -16,6 +16,67 @@ layer(lib);
   color: inherit;
 }
 
+:root {
+  font-family: 'Open Sans', serif;
+  font-optical-sizing: auto;
+  font-size: 16px;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings: 'wdth' 100;
+  color-scheme: light;
+  background: var(--page-background) fixed;
+  color: var(--color-text);
+
+  --color-main: rgb(159 168 218);
+  --color-text: #0e0e0e;
+  --color-logo-text: rgb(24 25 63);
+
+  --page-background: linear-gradient(rgb(228, 232, 255), white);
+  --header-background: white;
+  --post-background: rgb(244, 245, 255);
+
+  --color-border: #dcdcdc;
+  --color-loader-background: rgba(229, 229, 229, 0.6);
+
+  --color-nav-text: rgb(159 168 218);
+  --color-nav-background-hover: #f5f6ff;
+
+  --color-login-text: rgb(164, 175, 236);
+  --color-login-background-hover: #f7f8ff;
+  --color-signup-background-hover: rgb(173, 182, 237);
+
+  --color-logout-text: rgb(128, 128, 128);
+  --color-logout-background-hover: rgb(243, 243, 243);
+}
+
+:root.dark {
+  color-scheme: dark;
+
+  .logo-img {
+    filter: drop-shadow(0 0 7px);
+  }
+
+  --page-background: rgb(50, 50, 50);
+  --header-background: rgb(82, 82, 82);
+  --post-background: rgb(80, 80, 80);
+
+  --color-text: #fdfdfd;
+  --color-logo-text: rgb(255, 255, 255);
+
+  --color-nav-text: rgb(219, 225, 255);
+  --color-nav-background-hover: rgb(105, 108, 126);
+
+  --color-border: #8f8f8f;
+  --color-loader-background: rgba(187, 187, 187, 0.6);
+
+  --color-login-text: rgb(214, 219, 255);
+  --color-login-background-hover: rgb(103, 107, 132);
+  --color-signup-background-hover: rgb(187, 193, 236);
+
+  --color-logout-text: rgb(215, 215, 215);
+  --color-logout-background-hover: rgb(129, 129, 129);
+}
+
 input,
 textarea,
 button {
@@ -32,50 +93,28 @@ ul {
   list-style-type: none;
 }
 
-body {
-  background-image: linear-gradient(transparent, rgb(112, 13, 152));
+textarea {
+  resize: none;
 }
 
-:root {
-  font-family: 'Open Sans', serif;
-  font-optical-sizing: auto;
-  font-size: 16px;
-  font-weight: 400;
-  font-style: normal;
-  font-variation-settings: 'wdth' 100;
-  color-scheme: light;
-
-  color: var(--color-text);
-
-  --color-shadow: rgba(0, 0, 0, 0.5);
-  --color-text: #1e1e1e;
-  --color-header-text: #121338;
-  --color-header-background: white;
-  --color-header-link-text: #9fa8da;
-  --color-header-link-hover: #9fa8da1c;
-  --color-theme-btn-text: var(--color-header-background);
-  --color-theme-btn-background: #393939;
-  --color-theme-btn-hover: #646464;
-  --color-logout-btn-text: var(--color-header-background);
-  --color-logout-btn-background: #d0d0d0;
-  --color-signup-btn-hover: var(--color-header-link-hover);
-  --color-login-btn-text: var(--color-header-background);
-  --color-login-btn-background: var(--color-header-link-text);
-  --color-login-btn-hover: var(--color-header-link-hover);
+textarea,
+input {
+  padding: 0.2rem 0.4rem;
+  border: 1px solid var(--color-border);
 }
 
-:root.scheme-black {
-  color-scheme: black;
-  /* --color-background-primary: #9fa8da;
-  --color-background-secondary: #f9fbff;
-  --color-nav-link-text: #9fa8da;
-  --color-nav-link-background: #eaedff;
-  --color-logo-text: #191a40; */
+:is(input, textarea):focus {
+  outline: 2px dotted var(--color-nav-text);
+  outline-offset: -3px;
 }
 
 #root {
   position: relative;
   min-height: 100vh;
+}
+
+.err {
+  color: crimson;
 }
 
 .disabled,
@@ -92,18 +131,6 @@ body {
   pointer-events: none;
 }
 
-.hidden {
-  display: none;
-}
-
-.absolute {
-  position: absolute;
-}
-
-.invisible {
-  visibility: hidden;
-}
-
 .material-symbols-outlined {
   font-family: 'Material Symbols Outlined';
   font-variation-settings: 'wght' 700, 'FILL' 1;
@@ -112,4 +139,16 @@ body {
   font-weight: normal;
   user-select: none;
   color: currentColor;
+}
+
+@media (max-width: 1300px) {
+  :root {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 1120px) {
+  :root {
+    font-size: 12px;
+  }
 }

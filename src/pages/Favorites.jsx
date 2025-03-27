@@ -4,6 +4,7 @@ import PostList from '../components/PostList.jsx';
 import Loader from '../components/Loader.jsx';
 import postService from '../services/postService.js';
 import '../styles/Favorites.css';
+import windowUtils from '../services/windowUtils.js';
 
 const MAX_PAGE_LINKS = 7;
 const LINKS_AROUND_CURRENT = Math.floor((MAX_PAGE_LINKS - 2) / 2);
@@ -38,12 +39,18 @@ function Favorites() {
   useEffect(() => {
     if (response.isDone) {
       if (response.error) {
-        setErrorMsg('Error loading posts.');
+        setErrorMsg('Error loading posts!');
       } else if (response.data) {
         setPostList(response.data);
 
         setPagination();
       }
+    }
+
+    if (response.isInProgress) {
+      windowUtils.toggleWindowScroll(false);
+    } else {
+      windowUtils.toggleWindowScroll(true);
     }
   }, [response]);
 
@@ -125,10 +132,10 @@ function Favorites() {
     <section className="favorites-page">
       {response.isInProgress && (
         <Loader
-          text="Loading posts"
+          text="Loading"
           spinner={2}
           background={true}
-          contentStyle={{ position: 'fixed', top: '45vh' }}
+          vpFixedContent={true}
         />
       )}
 
@@ -142,7 +149,8 @@ function Favorites() {
 
       {pageNumbers?.length > 0 && (
         <section className="favorites-pagination">
-          <div
+          <button
+            type="button"
             className={
               'page-num arrow fast' +
               (page === pageNumbers[0] ? ' disabled' : '')
@@ -150,31 +158,23 @@ function Favorites() {
             data-page-num={pageNumbers[0]}
             onClick={handlePageChange}
           >
-            <span
-              style={{ transform: 'rotate(180deg)' }}
-              className="material-symbols-outlined"
-            >
-              last_page
-            </span>
-          </div>
+            <span className="material-symbols-outlined">first_page</span>
+          </button>
 
-          <div
+          <button
+            type="button"
             className={
               'page-num arrow' + (page === pageNumbers[0] ? ' disabled' : '')
             }
             data-page-num={page - 1}
             onClick={handlePageChange}
           >
-            <span
-              style={{ transform: 'rotate(180deg)' }}
-              className="material-symbols-outlined"
-            >
-              chevron_forward
-            </span>
-          </div>
+            <span className="material-symbols-outlined">chevron_backward</span>
+          </button>
 
           {pageNumbers.map((val) => (
-            <div
+            <button
+              type="button"
               data-page-num={typeof val === 'number' ? val : undefined}
               key={val}
               className={
@@ -185,10 +185,11 @@ function Favorites() {
               onClick={handlePageChange}
             >
               {val}
-            </div>
+            </button>
           ))}
 
-          <div
+          <button
+            type="button"
             className={
               'page-num arrow' +
               (page === pageNumbers.at(-1) ? ' disabled' : '')
@@ -197,8 +198,9 @@ function Favorites() {
             onClick={handlePageChange}
           >
             <span className="material-symbols-outlined">chevron_forward</span>
-          </div>
-          <div
+          </button>
+          <button
+            type="button"
             className={
               'page-num arrow fast' +
               (page === pageNumbers.at(-1) ? ' disabled' : '')
@@ -207,7 +209,7 @@ function Favorites() {
             onClick={handlePageChange}
           >
             <span className="material-symbols-outlined">last_page</span>
-          </div>
+          </button>
         </section>
       )}
     </section>

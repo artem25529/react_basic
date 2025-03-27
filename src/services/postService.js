@@ -51,6 +51,17 @@ const postService = {
 
     return await response.json();
   },
+
+  async createPost(post) {
+    const response = await fetch(POSTS_URL, {
+      method: 'POST',
+      body: JSON.stringify(post),
+
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    return await response.json();
+  },
 };
 
 export default postService;

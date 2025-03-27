@@ -1,10 +1,8 @@
 import { useEffect, useRef, useState, useContext } from 'react';
-import urlUtils from '../utils/urlUtils.js';
-import '../styles/SortAndSearch.css';
-import { Link } from 'react-router-dom';
-import localStorageService from '../services/localStorageService.js';
-
 import { PageWrapperContext } from '../pages/PageWrapper.jsx';
+import urlUtils from '../utils/urlUtils.js';
+import localStorageService from '../services/localStorageService.js';
+import '../styles/SortAndSearch.css';
 
 function SortAndSearch({ searchParams, setSearchParams }) {
   const { user } = useContext(PageWrapperContext);
@@ -96,10 +94,14 @@ function SortAndSearch({ searchParams, setSearchParams }) {
             }
             onClick={handleSortChange}
           >
-            <span className="material-symbols-outlined">visibility</span>
+            <button type="button" className="sort-prop">
+              <span className="material-symbols-outlined">visibility</span>
+            </button>
 
             {searchParams.sort !== 'views' && (
-              <span className="material-symbols-outlined">sort</span>
+              <span className="material-symbols-outlined sort-icon">
+                sync_alt
+              </span>
             )}
 
             {searchParams.sort === 'views' && searchParams.order === 'asc' && (
@@ -119,10 +121,14 @@ function SortAndSearch({ searchParams, setSearchParams }) {
             }
             onClick={handleSortChange}
           >
-            <span className="material-symbols-outlined">thumb_up</span>
+            <button type="button" className="sort-prop">
+              <span className="material-symbols-outlined">thumb_up</span>
+            </button>
 
             {searchParams.sort !== 'likes' && (
-              <span className="material-symbols-outlined">sort</span>
+              <span className="material-symbols-outlined sort-icon">
+                sync_alt
+              </span>
             )}
 
             {searchParams.sort === 'likes' && searchParams.order === 'asc' && (
@@ -144,7 +150,7 @@ function SortAndSearch({ searchParams, setSearchParams }) {
         <input
           type="text"
           id="search"
-          placeholder="Search"
+          placeholder="Search..."
           value={input}
           onChange={handleInputChange}
         />

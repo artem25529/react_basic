@@ -159,9 +159,13 @@ function Post({ post }) {
 
   function setTextareaHeight() {
     if (postTextRef.current) {
+      const borderWidth = parseFloat(
+        getComputedStyle(postTextRef.current).getPropertyValue('border-width'),
+      );
+
       postTextRef.current.style.height = '';
       postTextRef.current.style.height =
-        postTextRef.current.scrollHeight + 'px';
+        postTextRef.current.scrollHeight + borderWidth * 2 + 'px';
     }
   }
 
@@ -185,7 +189,7 @@ function Post({ post }) {
         setErrors,
       );
     } catch {
-      setErrorMsg(`Error validating post ${post.id}!.`);
+      setErrorMsg(`Error validating post ${post.id}!`);
       return;
     } finally {
       setIsLoading(false);
@@ -205,7 +209,7 @@ function Post({ post }) {
         setValues((prev) => ({ ...prev, ...formValues }));
         setIsEdit(false);
       } catch {
-        setErrorMsg(`Error updatinng post ${post.id}!.`);
+        setErrorMsg(`Error updatinng post ${post.id}!`);
       } finally {
         setIsLoading(false);
       }
@@ -466,6 +470,7 @@ function Post({ post }) {
               }
             >
               <button
+                tabIndex={!shouldUpdate || !user ? -1 : 0}
                 type="button"
                 data-stat="likes"
                 className={user && !shouldUpdate ? 'no-pointer-events' : ''}
@@ -485,6 +490,7 @@ function Post({ post }) {
               }
             >
               <button
+                tabIndex={!shouldUpdate || !user ? -1 : 0}
                 type="button"
                 data-stat="dislikes"
                 className={user && !shouldUpdate ? 'no-pointer-events' : ''}

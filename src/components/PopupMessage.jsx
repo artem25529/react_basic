@@ -28,7 +28,9 @@ function PopupMessage({
   }
 
   function closeFunc() {
-    resetCallback();
+    if (typeof resetCallback === 'function') {
+      resetCallback();
+    }
 
     if (typeof callback === 'function') {
       callback();
@@ -38,9 +40,13 @@ function PopupMessage({
   return (
     <div className={'popup-message' + (level ? ` ${level}` : '')}>
       <div className="popup-content">{message}</div>
-      <div className="popup-close" onClick={handleClose}>
-        &times;
-      </div>
+      <button
+        type="button"
+        className="material-symbols-outlined popup-close"
+        onClick={handleClose}
+      >
+        cancel
+      </button>
     </div>
   );
 }

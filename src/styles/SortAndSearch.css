@@ -1,30 +1,42 @@
 .sort-search-container {
   display: flex;
   align-items: center;
-  padding-block: 1em;
-  font-size: 1.5em;
+  font-size: 1.3em;
 
   .material-symbols-outlined {
-    font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 200, 'opsz' 48;
+    font-variation-settings: 'FILL' 0, 'wght' 320;
   }
 
   & > .sort-wrapper {
+    font-size: 1.2em;
     display: flex;
-    gap: 0.75em;
+    align-items: center;
+    gap: 0.5em;
 
     & > .sort-title {
-      font-weight: 600;
+      font-weight: 500;
     }
 
     & > .sort-fields {
       display: flex;
-      gap: 0.5em;
+      gap: 0.6em;
 
       & > .sort-field {
-        opacity: 0.56;
+        opacity: 0.4;
         cursor: pointer;
         display: flex;
         align-items: center;
+
+        & > .sort-icon {
+          rotate: 0.25turn;
+        }
+
+        & > .sort-prop {
+          border-radius: 0.3em;
+          display: flex;
+          align-items: center;
+          cursor: pointer;
+        }
 
         &.active {
           opacity: 1;
@@ -51,9 +63,9 @@
     }
 
     & > input[type='text'] {
-      width: 10em;
-      padding: 0.1em 0.4em;
-      border: 1px solid;
+      width: 10.5em;
+      padding: 0.25rem 0.8rem;
+      padding-right: 1.25em;
     }
 
     & > button[type='reset'] {
@@ -65,7 +77,7 @@
 
       & > .material-symbols-outlined {
         font-size: 1em;
-        font-variation-settings: 'wght' 600;
+        font-variation-settings: 'wght' 500;
       }
     }
   }

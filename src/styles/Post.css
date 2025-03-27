@@ -1,15 +1,11 @@
 .post {
-  background-color: rgb(253, 241, 255);
+  background-color: var(--post-background);
   padding: 1.5em;
   position: relative;
   display: flex;
   gap: 1em;
   flex-direction: column;
-  border: 1px solid;
-
-  .err {
-    color: crimson;
-  }
+  border: 1px solid var(--color-border);
 
   button {
     display: block;
@@ -64,13 +60,14 @@
     align-items: flex-start;
     gap: 1.8em;
     width: 5em;
-    right: -5em;
+    right: calc(-5em - 1px);
     top: 50%;
     transform: translateY(-50%);
     position: absolute;
 
     & > .post-control {
-      border: 1px solid;
+      background-color: var(--post-background);
+      border: 1px solid var(--color-border);
       border-left: none;
       padding: 0.45em 0.75em;
       border-top-right-radius: 0.4em;

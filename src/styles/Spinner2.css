@@ -3,11 +3,11 @@
   gap: 0.5em;
 
   & > .spinner-dot {
-    width: 0.32em;
+    width: 0.3em;
     aspect-ratio: 1;
     border-radius: 50%;
-    background-color: #7382d9;
-    animation: grow 0.6s ease infinite;
+    background-color: var(--color-main);
+    animation: grow 0.6s infinite;
   }
 }
 

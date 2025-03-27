@@ -21,8 +21,10 @@ function Login({ isLogin }) {
   const [errors, setErrors] = useState({});
 
   const [isLoading, setIsLoading] = useState(false);
+  const [isPasswordShown, setIsPasswordShown] = useState(false);
 
   const loginFormRef = useRef();
+  const passwordInputRef = useRef();
 
   function successCallback() {
     navigate('/blog');
@@ -56,7 +58,7 @@ function Login({ isLogin }) {
           setUser(user);
           setSuccessMsg("You've logged in successfully!");
           setSuccessMsgCallback(successCallback);
-          setSuccessMsgMillis(1000);
+          setSuccessMsgMillis(3000);
         } else {
           const newUser = await userService.createUser(
             values.email,
@@ -66,7 +68,7 @@ function Login({ isLogin }) {
           setUser(newUser);
           setSuccessMsg("You've created a user successfully!");
           setSuccessMsgCallback(successCallback);
-          setSuccessMsgMillis(1000);
+          setSuccessMsgMillis(3000);
         }
       }
     } catch {
@@ -76,17 +78,28 @@ function Login({ isLogin }) {
     }
   }
 
+  function togglePasswordVisibility() {
+    if (isPasswordShown) {
+      passwordInputRef.current.type = 'password';
+    } else {
+      passwordInputRef.current.type = 'text';
+    }
+
+    setIsPasswordShown(!isPasswordShown);
+  }
+
   return (
     <section className="login-page">
-      {isLoading && (
-        <Loader
-          text={(isLogin ? 'Authenticating' : 'Creating') + ' a user'}
-          spinner={2}
-          background={true}
-        />
-      )}
-
       <div className="login-wrapper">
+        {isLoading && (
+          <Loader
+            contentStyle={{ fontSize: '0.8em', fontWeight: '500' }}
+            text={(isLogin ? 'Authenticating' : 'Creating') + ' a user'}
+            spinner={1}
+            background={true}
+          />
+        )}
+
         <header className="login-title">
           <h2>{title}</h2>
         </header>
@@ -111,25 +124,53 @@ function Login({ isLogin }) {
               />
               {errors.email && (
                 <>
-                  <div className="login-err">{errors.email}</div>
+                  <div className="err">{errors.email}</div>
                 </>
               )}
             </div>
             <div className="login-field">
               <label htmlFor="password">Password</label>
-              <input
-                value={values.password}
-                onChange={handleValueChange}
-                type="password"
-                name="password"
-                placeholder="Password"
-                required
-                minLength="5"
-                maxLength="20"
-              />
+              <div className="password-wrapper">
+                <input
+                  ref={passwordInputRef}
+                  value={values.password}
+                  onChange={handleValueChange}
+                  type="password"
+                  name="password"
+                  placeholder="Password"
+                  required
+                  minLength="5"
+                  maxLength="20"
+                />
+                <div className="password-visibility">
+                  {!isPasswordShown && (
+                    <button
+                      type="button"
+                      className="show"
+                      onClick={togglePasswordVisibility}
+                    >
+                      <span className="material-symbols-outlined">
+                        visibility
+                      </span>
+                    </button>
+                  )}
+
+                  {isPasswordShown && (
+                    <button
+                      type="button"
+                      className="hide"
+                      onClick={togglePasswordVisibility}
+                    >
+                      <span className="material-symbols-outlined">
+                        visibility_off
+                      </span>
+                    </button>
+                  )}
+                </div>
+              </div>
               {errors.password && (
                 <>
-                  <div className="login-err">{errors.password}</div>
+                  <div className="err">{errors.password}</div>
                 </>
               )}
             </div>
