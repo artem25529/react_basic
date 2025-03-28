@@ -106,3 +106,35 @@
     }
   }
 }
+
+.post-delete-notification {
+  & > .delete-message {
+    font-size: 1.1em;
+    margin-bottom: 1em;
+  }
+
+  & > .delete-controls {
+    display: flex;
+    gap: 0.4em;
+
+    & > button {
+      font-weight: 500;
+      cursor: pointer;
+      border: 1px solid var(--color-border);
+      padding: 0.3em 0.4em;
+      border-radius: 0.4em;
+
+      &:hover {
+        box-shadow: 0 0 2px;
+      }
+
+      &.delete {
+        background-color: rgb(255, 135, 159);
+      }
+
+      &.cancel {
+        background-color: rgb(202, 202, 202);
+      }
+    }
+  }
+}

@@ -2,13 +2,13 @@
   z-index: 1000;
   position: fixed;
   inset: 0;
-  background-color: rgb(120, 120, 120, 0.5);
+  background-color: var(--color-loader-background);
   display: flex;
   align-items: center;
   justify-content: center;
 
   & > .fullscreen-popup-content {
-    background-color: white;
+    background-color: var(--header-background);
     padding: 2em;
   }
 }

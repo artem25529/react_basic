@@ -3,7 +3,7 @@
     {
       "id": "1",
       "title": "1st post title!",
-      "text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis est nihil ut reprehenderit? Quia, officiis, illo explicabo delectus dicta dolorum quaerat numquam culpa reiciendis necessitatibus consequuntur laborum quisquam accusantium velit. Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae assumenda quam aliquid quod. Temporibu!!s suscipit illo facere exercitationem, fugiat alias doloremque quaerat maiores aut qui ut consequuntur eaque sed nulla!",
+      "text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis est nihil ut reprehenderit? Quia, officiis, illo explicabo delectus dicta dolorum quaerat numquam culpa reiciendis necessitatibus consequuntur laborum quisquam accusantium velit. Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae assumenda quam aliquid quod. Temporibu!!s suscipit illo facere exercitationem, fugiat alias doloremque quaerat maiores aut qui ut consequuntur eaque sed nulla!!",
       "statistics": {
         "likes": 11,
         "dislikes": 2,
@@ -25,9 +25,9 @@
       "title": "3rd post title!",
       "text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis est nihil ut reprehenderit? Quia, officiis, illo explicabo delectus dicta dolorum quaerat numquam culpa reiciendis necessitatibus consequuntur laborum quisquam accusantium velit. Lorem ipsum dolor sit amet consectetur adipisicing elit.",
       "statistics": {
-        "views": 237,
         "likes": 66,
-        "dislikes": 17
+        "dislikes": 18,
+        "views": 238
       }
     },
     {
@@ -35,9 +35,9 @@
       "title": "4th post title!",
       "text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis est nihil ut reprehenderit? Quia, officiis, illo explicabo delectus dicta dolorum quaerat numquam culpa reiciendis necessitatibus consequuntur laborum quisquam accusantium velit. Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae assumenda quam aliquid quod. Temporibus suscipit illo facere exercitationem, fugiat alias doloremque quaerat maiores aut qui ut consequuntur eaque sed nulla!",
       "statistics": {
-        "views": 127,
-        "likes": 5,
-        "dislikes": 0
+        "likes": 6,
+        "dislikes": 0,
+        "views": 128
       }
     },
     {
@@ -217,9 +217,10 @@
       "email": "test1@gmail.com",
       "password": "Test_23",
       "favorites": [
+        "1",
         "2",
-        "6",
-        "1"
+        "3",
+        "4"
       ]
     },
     {

@@ -230,29 +230,19 @@ function Post({ post }) {
 
   function handleDeleteBtn() {
     setFullscreenPopupContent(
-      <>
-        <div className="post-delete-notification">
-          <div className="delete-message">
-            Are you sure you want to delete post with id {post.id}?
-          </div>
-          <div className="delete-controls">
-            <button
-              type="button"
-              className="delete"
-              onClick={handleApplyDelete}
-            >
-              Delete
-            </button>
-            <button
-              type="button"
-              className="cancel"
-              onClick={handleCancelDelete}
-            >
-              Cancel
-            </button>
-          </div>
+      <div className="post-delete-notification">
+        <div className="delete-message">
+          Are you sure you want to delete post with id {post.id}?
         </div>
-      </>,
+        <div className="delete-controls">
+          <button type="button" className="delete" onClick={handleApplyDelete}>
+            Delete
+          </button>
+          <button type="button" className="cancel" onClick={handleCancelDelete}>
+            Cancel
+          </button>
+        </div>
+      </div>,
     );
   }
 
@@ -366,7 +356,7 @@ function Post({ post }) {
                     value={formValues.title}
                     onChange={handleValueChange}
                     required
-                    minLength="2"
+                    minLength="5"
                     maxLength="100"
                   />
                 </header>
@@ -379,8 +369,8 @@ function Post({ post }) {
                   value={formValues.text}
                   onChange={handleValueChange}
                   required
-                  minLength="5"
-                  maxLength="500"
+                  minLength="10"
+                  maxLength="700"
                 />
                 {errors.text && <div className="err">{errors.text}</div>}
               </form>

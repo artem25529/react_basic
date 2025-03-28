@@ -1,13 +1,10 @@
 import { useRef, useState, useContext, useEffect } from 'react';
-import '../styles/NewPost.css';
-
-import Loader from '../components/Loader.jsx';
 import { PageWrapperContext } from '../pages/PageWrapper.jsx';
-
+import Loader from '../components/Loader.jsx';
 import validationService from '../services/validationService.js';
-
 import postService from '../services/postService.js';
 import windowUtils from '../services/windowUtils.js';
+import '../styles/NewPost.css';
 
 function NewPost() {
   const { setErrorMsg, setSuccessMsg } = useContext(PageWrapperContext);
@@ -20,6 +17,17 @@ function NewPost() {
   useEffect(() => {
     windowUtils.toggleWindowScroll(!isLoading);
   }, [isLoading]);
+
+  function setTextareaHeight(e) {
+    const textarea = e.currentTarget;
+
+    const borderWidth = parseFloat(
+      getComputedStyle(textarea).getPropertyValue('border-width'),
+    );
+
+    textarea.style.height = '';
+    textarea.style.height = textarea.scrollHeight + borderWidth * 2 + 'px';
+  }
 
   async function handleFormSubmit(e) {
     e.preventDefault();
@@ -113,7 +121,8 @@ function NewPost() {
                 name="post-text"
                 required
                 minLength="10"
-                maxLength="250"
+                maxLength="700"
+                onInput={setTextareaHeight}
               />
               {errors['post-text'] && (
                 <div className="err">{errors['post-text']}</div>

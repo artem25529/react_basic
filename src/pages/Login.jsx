@@ -72,7 +72,7 @@ function Login({ isLogin }) {
         }
       }
     } catch {
-      setErrorMsg(`Error ${isLogin ? 'authenticating' : 'creating'} a user.`);
+      setErrorMsg(`Error ${isLogin ? 'authenticating' : 'creating'} a user!`);
     } finally {
       setIsLoading(false);
     }
@@ -93,9 +93,8 @@ function Login({ isLogin }) {
       <div className="login-wrapper">
         {isLoading && (
           <Loader
-            contentStyle={{ fontSize: '0.8em', fontWeight: '500' }}
             text={(isLogin ? 'Authenticating' : 'Creating') + ' a user'}
-            spinner={1}
+            spinner={2}
             background={true}
           />
         )}
@@ -140,7 +139,7 @@ function Login({ isLogin }) {
                   placeholder="Password"
                   required
                   minLength="5"
-                  maxLength="20"
+                  maxLength="30"
                 />
                 <div className="password-visibility">
                   {!isPasswordShown && (
