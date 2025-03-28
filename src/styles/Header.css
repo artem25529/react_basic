@@ -55,8 +55,15 @@
 
           &.active {
             text-decoration: underline 0.13em;
-            text-underline-position: below;
             text-underline-offset: 20px;
+
+            @media (max-width: 1300px) {
+              text-underline-offset: 17px;
+            }
+
+            @media (max-width: 1120px) {
+              text-underline-offset: 15px;
+            }
           }
         }
       }
