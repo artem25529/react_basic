@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useRef } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { PageWrapperContext } from '../pages/PageWrapper.jsx';
 import '../styles/Header.css';
@@ -6,6 +6,8 @@ import '../styles/Header.css';
 function Header() {
   const { user, setUser, theme, setTheme } = useContext(PageWrapperContext);
   const navigate = useNavigate();
+
+  const navRef = useRef();
 
   function handleLogout() {
     localStorage.removeItem('loggedInUser');
@@ -15,6 +17,14 @@ function Header() {
 
   function handleThemeChange() {
     setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
+  }
+
+  function handleMenuClick() {
+    if (navRef.current.checkVisibility()) {
+      navRef.current.style.display = 'none';
+    } else {
+      navRef.current.style.display = 'flex';
+    }
   }
 
   return (
@@ -29,7 +39,15 @@ function Header() {
       </Link>
 
       <nav className="navigation">
-        <ul>
+        <button
+          onClick={handleMenuClick}
+          type="button"
+          className="material-symbols-outlined nav-menu"
+        >
+          menu
+        </button>
+
+        <ul ref={navRef}>
           <li>
             <NavLink className="nav-btn" to="/blog">
               Blog
@@ -91,16 +109,25 @@ function Header() {
               type="button"
               className="logout nav-btn"
             >
-              Log Out
+              <span className="logout-label">Log Out</span>
+              <span className="material-symbols-outlined logout-icon">
+                logout
+              </span>
             </button>
           </section>
         ) : (
           <section className="login-wrapper">
             <Link to="/login" className="login nav-btn">
-              Log In
+              <span className="login-label">Log In</span>
+              <span className="material-symbols-outlined login-icon">
+                login
+              </span>
             </Link>
             <Link to="/signup" className="signup nav-btn">
-              Sign Up
+              <span className="signup-label">Sign Up</span>
+              <span className="material-symbols-outlined signup-icon">
+                person_add
+              </span>
             </Link>
           </section>
         )}

@@ -9,7 +9,7 @@ import windowUtils from '../services/windowUtils.js';
 const INTERVAL = 3000;
 
 function About() {
-  const { setErrorMsg } = useContext(PageWrapperContext);
+  const { setErrorMsg, user } = useContext(PageWrapperContext);
 
   const [response, setResponse] = useState({
     pages: null,
@@ -114,7 +114,7 @@ function About() {
       )}
 
       <div className="about-wrapper">
-        <div className="title">About Me</div>
+        <div className="title">{'About ' + (user?.email ?? '')}</div>
         <div className="text">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Porro
           possimus expedita suscipit illum at consectetur facilis facere
@@ -141,19 +141,19 @@ function About() {
           <div className={`content${postList.length > 1 ? ' slider' : ''}`}>
             <button
               type="button"
-              className="btn prev"
+              className="material-symbols-outlined btn prev"
               onClick={handleButtonClick}
             >
-              <span className="material-symbols-outlined">arrow_back_2</span>
+              arrow_back_2
             </button>
             <PostList posts={postList} />
             <button
               ref={nextBtnRef}
               type="button"
-              className="btn next"
+              className="material-symbols-outlined btn next"
               onClick={handleButtonClick}
             >
-              <span className="material-symbols-outlined">play_arrow</span>
+              play_arrow
             </button>
           </div>
         </div>

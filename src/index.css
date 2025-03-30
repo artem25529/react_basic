@@ -141,14 +141,20 @@ input {
   color: currentColor;
 }
 
-@media (max-width: 1300px) {
+@media (max-width: 1440px) {
   :root {
     font-size: 14px;
   }
 }
 
-@media (max-width: 1120px) {
+@media (max-width: 1080px) {
   :root {
     font-size: 12px;
+  }
+}
+
+@media (max-width: 450px) {
+  :root {
+    font-size: 10px;
   }
 }
