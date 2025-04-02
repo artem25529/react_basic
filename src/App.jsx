@@ -14,6 +14,7 @@ const About = lazy(() => import('./pages/About.jsx'));
 const Favorites = lazy(() => import('./pages/Favorites.jsx'));
 const Login = lazy(() => import('./pages/Login.jsx'));
 const NewPost = lazy(() => import('./pages/NewPost.jsx'));
+const NoPage = lazy(() => import('./pages/NoPage.jsx'));
 
 function App() {
   return (
@@ -83,6 +84,7 @@ function App() {
               </Suspense>
             }
           />
+          <Route path="*" element={<NoPage />} />
         </Route>
       </Routes>
     </Router>
