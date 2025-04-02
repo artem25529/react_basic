@@ -1,6 +1,6 @@
 import Skeleton, { PostSkeleton } from '../components/Skeleton.jsx';
 
-function BlogSkeleton({ disableLine, disablePulser, style, contentStyle }) {
+function BlogSkeleton() {
   const posts = [];
 
   for (let i = 0; i < 5; i++) {
@@ -8,45 +8,22 @@ function BlogSkeleton({ disableLine, disablePulser, style, contentStyle }) {
   }
 
   return (
-    <Skeleton
-      disableLine={disableLine}
-      disablePulser={disablePulser}
-      style={style}
-      contentStyle={contentStyle}
-    >
-      <div className="block">
-        <div
-          className="line"
-          style={{
-            width: '15%',
-            marginLeft: 'auto',
-            marginBottom: '0.85em',
-            height: '1.3lh',
-          }}
-        ></div>
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            gap: '0.8em',
-            alignItems: 'center',
-          }}
-        >
-          <div className="line" style={{ width: '20%', height: '1.3lh' }}></div>
-          <div
-            style={{
-              display: 'flex',
-              gap: '0.8em',
-            }}
-          >
-            <div className="circle" style={{ marginRight: 'auto' }}></div>
-            <div className="circle" style={{ marginRight: 'auto' }}></div>
+    <Skeleton line={true}>
+      <div className="blog-skeleton-wrapper">
+        <div className="button blog-skeleton-add-post"></div>
+        <div className="blog-skeleton-sort-search-wrapper">
+          <div className="blog-skeleton-sort">
+            <div className="title"></div>
+            <div className="circle"></div>
+            <div className="circle"></div>
           </div>
-          <div className="circle" style={{ marginLeft: 'auto' }}></div>
-          <div className="line" style={{ width: '25%', height: '1.3lh' }}></div>
+          <div className="blog-skeleton-search">
+            <div className="circle"></div>
+            <div className="title"></div>
+          </div>
         </div>
+        <div className="blog-skeleton-posts">{posts}</div>
       </div>
-      {posts}
     </Skeleton>
   );
 }

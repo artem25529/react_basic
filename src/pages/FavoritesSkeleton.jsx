@@ -2,19 +2,21 @@ import Skeleton, { PostSkeleton } from '../components/Skeleton.jsx';
 
 function FavoritesSkeleton() {
   const posts = [];
+  const circles = [];
 
   for (let i = 0; i < 2; i++) {
     posts.push(<PostSkeleton />);
   }
 
+  for (let i = 0; i < 5; i++) {
+    circles.push(<div className="circle"></div>);
+  }
+
   return (
-    <Skeleton>
-      {posts}
-      <div style={{ display: 'flex', gap: '1.2em', justifyContent: 'end' }}>
-        <div className="circle"></div>
-        <div className="circle"></div>
-        <div className="circle"></div>
-        <div className="circle"></div>
+    <Skeleton line={true}>
+      <div className="favorites-skeleton-wrapper">
+        <div className="favorites-skeleton-posts">{posts}</div>
+        <div className="favorites-skeleton-pages">{circles}</div>
       </div>
     </Skeleton>
   );

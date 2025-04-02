@@ -47,6 +47,8 @@ layer(lib);
 
   --color-logout-text: rgb(128, 128, 128);
   --color-logout-background-hover: rgb(243, 243, 243);
+
+  --color-skeleton-pulser: rgba(255, 255, 255, 0.7);
 }
 
 :root.dark {
@@ -75,6 +77,8 @@ layer(lib);
 
   --color-logout-text: rgb(215, 215, 215);
   --color-logout-background-hover: rgb(129, 129, 129);
+
+  --color-skeleton-pulser: rgba(255, 255, 255, 0.3);
 }
 
 input,

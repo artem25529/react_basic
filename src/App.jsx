@@ -1,13 +1,12 @@
 import { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import './App.css';
-
 import PageWrapperSkeleton from './pages/PageWrapperSkeleton.jsx';
 import BlogSkeleton from './pages/BlogSkeleton.jsx';
 import AboutSkeleton from './pages/AboutSkeleton.jsx';
 import NewPostSkeleton from './pages/NewPostSkeleton.jsx';
 import FavoritesSkeleton from './pages/FavoritesSkeleton.jsx';
 import LoginSkeleton from './pages/LoginSkeleton.jsx';
+import './App.css';
 
 const PageWrapper = lazy(() => import('./pages/PageWrapper.jsx'));
 const Blog = lazy(() => import('./pages/Blog.jsx'));
