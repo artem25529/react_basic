@@ -8,6 +8,8 @@ import Advert from '../components/Advert.jsx';
 import themeService from '../services/themeService.js';
 import localStorageService from '../services/localStorageService.js';
 import urlUtils from '../utils/urlUtils.js';
+import ErrorBoundary from '../components/ErrorBoundary.jsx';
+import ErrorMsg from '../components/ErrorMsg.jsx';
 import '../styles/PageWrapper.css';
 
 const PageWrapperContext = createContext();
@@ -127,7 +129,9 @@ function PageWrapper() {
         <div className="page-content-wrapper">
           <Advert />
           <main className="page-main">
-            <Outlet />
+            <ErrorBoundary fallback={<ErrorMsg />}>
+              <Outlet />
+            </ErrorBoundary>
           </main>
           <Footer />
         </div>

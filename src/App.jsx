@@ -6,6 +6,8 @@ import AboutSkeleton from './pages/AboutSkeleton.jsx';
 import NewPostSkeleton from './pages/NewPostSkeleton.jsx';
 import FavoritesSkeleton from './pages/FavoritesSkeleton.jsx';
 import LoginSkeleton from './pages/LoginSkeleton.jsx';
+import ErrorBoundary from './components/ErrorBoundary.jsx';
+import ErrorMsg from './components/ErrorMsg.jsx';
 import './App.css';
 
 const PageWrapper = lazy(() => import('./pages/PageWrapper.jsx'));
@@ -24,7 +26,9 @@ function App() {
           path="/"
           element={
             <Suspense fallback={<PageWrapperSkeleton />}>
-              <PageWrapper />
+              <ErrorBoundary fallback={<ErrorMsg />}>
+                <PageWrapper />
+              </ErrorBoundary>
             </Suspense>
           }
         >
