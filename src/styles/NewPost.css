@@ -7,6 +7,7 @@
   input,
   textarea {
     padding: 0.3em 0.4em;
+    box-shadow: 0 2px 3px var(--color-text);
   }
 
   textarea {
@@ -23,9 +24,10 @@
     width: min(90%, 500px);
 
     & > .new-post-title {
-      font-size: 1.1em;
+      font-size: 1.2em;
       text-align: center;
-      font-weight: 600;
+      font-weight: 650;
+      color: var(--color-nav-text);
     }
 
     & > .new-post-form {
@@ -45,11 +47,12 @@
       }
 
       & > button {
-        font-weight: 700;
+        font-weight: 600;
         cursor: pointer;
         align-self: center;
         border: 1px solid var(--color-border);
         padding: 0.1em 0.4em;
+        border-radius: 0.3em;
 
         &:hover {
           box-shadow: 0 0 5px;
