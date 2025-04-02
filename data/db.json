@@ -43,7 +43,7 @@
     {
       "id": "5",
       "title": "5th post title!",
-      "text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis est nihil ut reprehenderit? Quia, officiis, illo explicabo delectus dicta dolorum quaerat numquam culpa reiciendis necessitatibus consequuntur laborum quisquam accusantium velit. Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae assumenda quam aliquid quod. Temporibus suscipit illo facere exercitationem, fugiat alias doloremque quaerat maiores aut qui ut consequuntur eaque sed nulla!",
+      "text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis est nihil ut reprehenderit? Quia, officiis, illo explicabo delectus dicta dolorum quaerat numquam culpa reiciendis necessitatibus consequuntur laborum quisquam accusantium velit. Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae assumenda quam aliquid quod. Temporibus suscipit illo facere exercitationem, fugiat alias doloremque quaerat maiores aut qui ut consequuntur eaque sed nulla!!",
       "statistics": {
         "views": 15,
         "likes": 0,
@@ -83,7 +83,7 @@
     {
       "id": "9",
       "title": "9th post title!",
-      "text": "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+      "text": "Lorem ipsum dolor sit amet consectetur adipisicing elit.!",
       "statistics": {
         "views": 15,
         "likes": 0,
