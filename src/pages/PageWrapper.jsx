@@ -31,6 +31,16 @@ function PageWrapper() {
   const [errorMsgCallback, setErrorMsgCallback] = useState();
   const [fullscreenPopupContent, setFullscreenPopupContent] = useState();
 
+  useEffect(() => {
+    document.body.addEventListener('keydown', (e) => {
+      if (e.key === 'B' && e.shiftKey && e.ctrlKey && e.altKey) {
+        e.stopImmediatePropagation();
+
+        navigate('/billy');
+      }
+    });
+  }, []);
+
   function successPopupResetCallback() {
     setSuccessMsg();
     setSuccessMsgCallback();

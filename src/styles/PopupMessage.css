@@ -12,7 +12,6 @@
   padding: 0.7em 1em;
   padding-right: 0.7em;
   color: black;
-  animation: reveal 0.2s ease-out both;
 
   &.error {
     background-color: rgb(255, 161, 172);
@@ -30,15 +29,5 @@
   & > .popup-close {
     cursor: pointer;
     align-self: flex-start;
-  }
-}
-
-@keyframes reveal {
-  from {
-    translate: 0 -10em;
-  }
-
-  to {
-    translate: 0 0;
   }
 }

@@ -47,6 +47,10 @@
         & > .new-post-field {
           display: flex;
           flex-direction: column;
+
+          & > .err {
+            margin-top: 0.4em;
+          }
         }
       }
 

@@ -8,6 +8,7 @@ import FavoritesSkeleton from './pages/FavoritesSkeleton.jsx';
 import LoginSkeleton from './pages/LoginSkeleton.jsx';
 import ErrorBoundary from './components/ErrorBoundary.jsx';
 import ErrorMsg from './components/ErrorMsg.jsx';
+import Billy from './pages/Billy.jsx';
 import './App.css';
 
 const PageWrapper = lazy(() => import('./pages/PageWrapper.jsx'));
@@ -22,6 +23,8 @@ function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/billy" element={<Billy />} />
+
         <Route
           path="/"
           element={

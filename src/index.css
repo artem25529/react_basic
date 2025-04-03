@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Yellowtail&display=swap')
 layer(lib);
-@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200')
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=arrow_back_2,call,cancel,check_circle,chevron_backward,chevron_forward,close,dark_mode,delete,edit_square,error,favorite,first_page,last_page,light_mode,login,logout,mail,menu,person_add,play_arrow,search,straight,sync_alt,thumb_down,thumb_up,visibility,visibility_off,volume_off,volume_up')
 layer(lib);
 
 * {
